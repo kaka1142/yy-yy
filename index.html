@@ -4377,7 +4377,8 @@ ${voiceExtraPrompt}
                         }
 
                         // --- 🚀 发起请求 (完全模仿 jrsy 的极简结构) ---
-                        const _url = `https://api.minimax.chat/v1/t2a_v2?GroupId=${groupId}`;
+                        const _url = `/minimax-proxy/v1/t2a_v2?GroupId=${groupId}`;
+
                         
                         // 只传最核心的参数，去掉多余的 audio_setting，防止报错
                         const payload = {
