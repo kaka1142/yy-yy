@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/minimax-proxy/:path*",
+      "destination": "https://api.minimax.chat/:path*"
+    }
+  ]
+}
