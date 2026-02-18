@@ -4542,62 +4542,54 @@ ${voiceExtraPrompt}
             }
             // ============ 补丁结束 ============
         
-        // --- 保存消息到本地 ---
         
-             // A. 保存AI的消息 (强力纠错版：强制识别语音标签 + 清洗文字)
-        const bubbles = aiReply.split('|||').filter(b => b.trim());
-     
-        if (bubbles.length > 0) {
-            bubbles.forEach((bubbleText, index) => {
-                if(bubbleText) { 
-                    let content = bubbleText;
-                    
-                    // 1. 初始判断：根据设置判断是否发语音
-                    let isVoice = (index === 0 && shouldSendVoice);
+                // --- 保存消息到本地 ---
 
-                    // 2. 【核心修复】：检测 AI 是否自作主张输出了语音标签
-                    // 只要包含这些关键词，强制变成语音条，并清洗文字
-                    if (content.match(/VOICE|语音|\[.*?\]/)) {
-                         // 检测是否包含语音相关的关键词
-                         if (content.includes('VOICE') || content.includes('语音')) {
-                             isVoice = true; // 强制标记为语音条
-                             
-                             // === 强力清洗逻辑 ===
-                             content = content
-                                .replace(/\[CMD:VOICE:(.*?)\]/g, '$1') // 提取指令里的内容
-                                .replace(/\[VOICE:\s*["“]?(.*?)["”]?:?\]/gi, '$1') // 提取 [VOICE: "内容"] 里的内容
-                                .replace(/\[\/?VOICE.*?\]/gi, '') // 删掉剩下的 [VOICE] 标签
-                                .replace(/\[语音.*?\]/g, '')      // 删掉 [语音...]
-                                .replace(/[\(（]语音[\)）]/g, '') // 删掉 (语音)
-                                .trim();
-                         }
-                    }
+        // 1. 核心判断：只要设置里开了语音开关，就强制用语音条模式
+        // 这样点击语音条，就会展开显示下面的文字，而不是碎成一堆气泡
+        const isVoiceMode = shouldSendVoice; 
 
-                    // 防止清洗后为空
-                    if(!content) content = " ";
+        // 2. 合并文字：把所有碎片拼接成完整的一段话，防止刷屏
+        let fullText = aiReply.replace(/\|\|\|/g, " ").trim();
+        
+        // 3. 清洗文字：去掉可能残留的标签
+        fullText = fullText.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').trim();
+        if(!fullText) fullText = "..."; 
 
-                    // 3. 决定最终类型：只要 isVoice 为真，就是语音条
-                    const msgType = isVoice ? 'voice_text' : 'text';
+        if (isVoiceMode) {
+            // ============ 【语音条模式】 ============
+            // 无论有没有真的声音，都显示为语音条
+            // 逻辑：点击语音条 -> (有声音播声音 / 没声音假装震动) -> 同时展开下方文字
+            const newMsg = {
+                sender: 'them',
+                text: fullText, 
+                timestamp: Date.now(),
+                quote: null,
+                // 如果有真实音频数据就存，没有就是 null (前端会自动处理为模拟模式)
+                audio: (typeof audioBase64 !== 'undefined' && audioBase64) ? audioBase64 : null,
+                type: 'voice_text' 
+            };
 
-                    const newMsg = {
-                        sender: 'them',
-                        text: content, 
-                        timestamp: Date.now() + index * 10,
-                        quote: null,
-                        // 只有第一条且真的有录音数据时，才放音频文件；否则就是 null
-                        audio: (index === 0 && typeof audioBase64 !== 'undefined' && audioBase64) ? audioBase64 : null,
-                        type: msgType 
-                    };
-                    
-                    if (index === 0 && shouldQuote && quoteData) {
-                        newMsg.quote = quoteData;
-                    }
-                    
-                    messages.push(newMsg);
-                }
-            });
+            if (shouldQuote && quoteData) newMsg.quote = quoteData;
+            messages.push(newMsg);
+
+        } else {
+            // ============ 【纯文字模式】 ============
+            // 如果用户关了语音开关，就发普通气泡
+            // 也是强制合并成一条，不再切碎
+            const newMsg = {
+                sender: 'them',
+                text: fullText, 
+                timestamp: Date.now(),
+                quote: null,
+                audio: null,
+                type: 'text'
+            };
+            
+            if (shouldQuote && quoteData) newMsg.quote = quoteData;
+            messages.push(newMsg);
         }
-                                   
+
 
 
 
