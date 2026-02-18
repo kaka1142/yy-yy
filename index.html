@@ -1875,10 +1875,21 @@
 
         /* ============ 视频通话全屏弹窗 (黑白极简) ============ */
         .vc-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff; z-index: 2000; display: none;
-            flex-direction: column; overflow: hidden;
-        }
+    position: fixed !important; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    
+    /* 这里的 z-index 改成了极大值 */
+    z-index: 2147483647 !important; 
+    
+    background: #fff; 
+    display: none; 
+    flex-direction: column; 
+    overflow: hidden;
+}
+
 
         /* 1. 呼叫中界面 (白底黑字) */
         .vc-calling-ui {
@@ -7026,125 +7037,115 @@ function checkActivationCode() {
         }, 2000);
     }
 }
-/* ================= 强力调试模式：视频通话 ================= */
+
+/* ================= 视频通话逻辑 (最终修复版) ================= */
 let localStream = null;
 let currentFacingMode = 'user'; 
 let isCameraOn = true;
 
 // 1. 发起视频通话
 async function startVideoCall() { 
+    if(!currentChatId) return;
+    const list = JSON.parse(localStorage.getItem(CHAR_LIST_KEY) || "[]");
+    const char = list.find(c => c.id == currentChatId);
+    if(!char) return;
+
+    // 1. 立即启动摄像头
     try {
-        alert("步骤1: 开始执行");
-
-        if(!currentChatId) {
-            alert("错误：没有找到聊天对象");
-            return;
-        }
-        
-        const list = JSON.parse(localStorage.getItem(CHAR_LIST_KEY) || "[]");
-        const char = list.find(c => c.id == currentChatId);
-        if(!char) {
-            alert("错误：读取人物数据失败");
-            return;
-        }
-
-        // 尝试强制让屏幕变红，测试界面是否卡死 (正常会一闪而过)
-        document.body.style.background = "red";
-        setTimeout(() => document.body.style.background = "", 500);
-
-        alert("步骤2: 准备请求摄像头权限 (请点击允许)");
-
-        // 启动摄像头
         await initCamera();
-
-        alert("步骤3: 权限获取成功！准备显示界面");
-
-        // 填充信息
-        const overlay = document.getElementById('video-call-overlay');
-        const avatarEl = document.getElementById('vc-call-avatar');
-        
-        if(!overlay) {
-            alert("严重错误：HTML里找不到 id='video-call-overlay' 的元素！");
-            return;
-        }
-        if(!avatarEl) {
-            alert("错误：HTML里找不到头像元素");
-            return;
-        }
-
-        document.getElementById('vc-call-avatar').src = char.avatar;
-        document.getElementById('vc-call-name').innerText = char.name;
-        document.getElementById('vc-remote-avatar').src = char.avatar;
-
-        // === 强制显示界面 ===
-        overlay.style.display = 'flex';
-        overlay.style.zIndex = '2147483647'; // 设置为最大值，防止被遮挡
-        overlay.style.visibility = 'visible';
-        overlay.style.opacity = '1';
-        
-        document.getElementById('vc-calling-layer').style.display = 'flex';
-        document.getElementById('vc-active-layer').style.display = 'none';
-        
-        if(typeof closeMorePanel === 'function') closeMorePanel();
-
-        alert("步骤4: 界面指令已下达，你应该能看到白色呼叫界面了");
-
-        // 2秒后接通
-        setTimeout(() => {
-            // alert("步骤5: 正在接通...");
-            const callingLayer = document.getElementById('vc-calling-layer');
-            const activeLayer = document.getElementById('vc-active-layer');
-            const videoEl = document.getElementById('local-video');
-
-            if(callingLayer) callingLayer.style.display = 'none';
-            if(activeLayer) activeLayer.style.display = 'flex';
-            
-            if(videoEl) {
-                videoEl.play().catch(e => console.log("自动播放微小错误，忽略"));
-            }
-
-            if(typeof addVideoBubble === 'function') {
-                addVideoBubble("them", "接通啦！");
-            }
-        }, 2000);
-
-    } catch (globalErr) {
-        alert("【致命错误】: " + globalErr.message);
+    } catch (e) {
+        alert("无法启动摄像头，请检查权限。\n如果是iPhone，请在设置中允许Safari访问相机。");
+        return;
     }
+
+    // 2. 填充界面信息
+    const overlay = document.getElementById('video-call-overlay');
+    document.getElementById('vc-call-avatar').src = char.avatar;
+    document.getElementById('vc-call-name').innerText = char.name;
+    document.getElementById('vc-remote-avatar').src = char.avatar;
+
+    // 3. 强制显示界面 (最高层级)
+    overlay.style.display = 'flex';
+    // 再次通过 JS 确保层级最高，双重保险
+    overlay.style.zIndex = '2147483647'; 
+    
+    document.getElementById('vc-calling-layer').style.display = 'flex';
+    document.getElementById('vc-active-layer').style.display = 'none';
+    
+    if(typeof closeMorePanel === 'function') closeMorePanel();
+
+    // 4. 模拟接通 (2秒后)
+    setTimeout(() => {
+        document.getElementById('vc-calling-layer').style.display = 'none';
+        document.getElementById('vc-active-layer').style.display = 'flex';
+        
+        const videoEl = document.getElementById('local-video');
+        // 强制播放
+        if(videoEl) {
+            videoEl.play().catch(e => {
+                // 如果还不行，静音播放通常能绕过限制
+                videoEl.muted = true;
+                videoEl.play();
+            });
+        }
+
+        if(typeof addVideoBubble === 'function') {
+            addVideoBubble("them", "接通啦！");
+        }
+    }, 2000);
 }
 
 // 2. 初始化摄像头
 async function initCamera() {
     const videoEl = document.getElementById('local-video');
-    if(!videoEl) {
-        throw new Error("HTML里找不到 <video> 标签");
-    }
-
     if (localStream) {
         localStream.getTracks().forEach(track => track.stop());
     }
 
-    try {
-        const constraints = {
-            video: { facingMode: currentFacingMode },
-            audio: false 
-        };
-        
-        // 这行代码执行后，浏览器会弹窗询问权限
-        localStream = await navigator.mediaDevices.getUserMedia(constraints);
-        
-        videoEl.srcObject = localStream;
-        videoEl.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'none';
-        
-        // iOS 必须加这两个属性才能播放
-        videoEl.setAttribute('autoplay', '');
-        videoEl.setAttribute('playsinline', ''); 
-        
-    } catch (err) {
-        // 如果用户拒绝了，或者系统不支持，会在这里报错
-        alert("摄像头启动失败: " + err.name + " - " + err.message);
-        throw err; 
+    const constraints = {
+        video: { facingMode: currentFacingMode },
+        audio: false 
+    };
+    
+    localStream = await navigator.mediaDevices.getUserMedia(constraints);
+    
+    videoEl.srcObject = localStream;
+    videoEl.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'none';
+    videoEl.setAttribute('autoplay', '');
+    videoEl.setAttribute('playsinline', ''); 
+}
+
+// 3. 翻转摄像头
+function switchCamera() {
+    currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
+    initCamera();
+}
+
+// 4. 开关摄像头
+function toggleCamera() {
+    if (!localStream) return;
+    isCameraOn = !isCameraOn;
+    localStream.getVideoTracks()[0].enabled = isCameraOn;
+
+    const btnIcon = document.querySelector('#btn-toggle-cam i');
+    const mask = document.getElementById('vc-cam-off-mask');
+    
+    if (isCameraOn) {
+        btnIcon.className = "fas fa-video"; 
+        mask.style.display = "none";
+    } else {
+        btnIcon.className = "fas fa-video-slash"; 
+        mask.style.display = "flex";
     }
+}
+
+// 5. 挂断
+function endVideoCall() {
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+    }
+    document.getElementById('video-call-overlay').style.display = 'none';
 }
 
 
