@@ -3028,6 +3028,65 @@
             </div>
         </div>
 
+ <!-- ============ 视频通话全屏组件 ============ -->
+    <div id="video-call-overlay" class="vc-overlay">
+        
+        <!-- 阶段 1: 呼叫等待 (白底) -->
+        <div id="vc-calling-layer" class="vc-calling-ui">
+            <div class="vc-avatar-pulse">
+                <div class="vc-pulse-ring"></div>
+                <div class="vc-pulse-ring" style="animation-delay: 0.5s;"></div>
+                <img id="vc-call-avatar" src="">
+            </div>
+            <div id="vc-call-name" class="vc-name">对方名字</div>
+            <div class="vc-status">等待对方接听...</div>
+            
+            <!-- 挂断按钮 -->
+            <div class="vc-btn vc-btn-hangup" onclick="endVideoCall()" style="margin-top: 60px;">
+                <i class="fas fa-phone-slash"></i>
+            </div>
+        </div>
+
+        <!-- 阶段 2: 通话中 (视频底) -->
+        <div id="vc-active-layer" class="vc-active-ui">
+            <!-- 你的摄像头画面 -->
+            <video id="local-video" autoplay playsinline muted></video>
+            
+            <!-- 摄像头关闭时的黑屏提示 -->
+            <div id="vc-cam-off-mask" class="vc-cam-off-mask">
+                <i class="fas fa-video-slash" style="font-size: 30px;"></i>
+                <span>摄像头已关闭</span>
+            </div>
+
+            <!-- 对方的小头像 (假装是对方的画面) -->
+            <div class="vc-remote-win">
+                <img id="vc-remote-avatar" src="">
+            </div>
+
+            <!-- 字幕/对话气泡区 -->
+            <div id="vc-chat-area" class="vc-chat-overlay">
+                <!-- JS 会往这里插气泡 -->
+            </div>
+
+            <!-- 底部控制栏 -->
+            <div class="vc-controls">
+                <!-- 翻转镜头 -->
+                <div class="vc-btn vc-btn-sub" onclick="switchCamera()">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                
+                <!-- 挂断 -->
+                <div class="vc-btn vc-btn-hangup" onclick="endVideoCall()">
+                    <i class="fas fa-phone-slash"></i>
+                </div>
+
+                <!-- 开关摄像头 -->
+                <div class="vc-btn vc-btn-sub" onclick="toggleCamera()" id="btn-toggle-cam">
+                    <i class="fas fa-video"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const DB_PREFIX = "my_desktop_v2_";
@@ -7497,65 +7556,6 @@ function addVideoBubble(sender, text) {
         </div>
     </div>
 
-    <!-- ============ 视频通话全屏组件 ============ -->
-    <div id="video-call-overlay" class="vc-overlay">
-        
-        <!-- 阶段 1: 呼叫等待 (白底) -->
-        <div id="vc-calling-layer" class="vc-calling-ui">
-            <div class="vc-avatar-pulse">
-                <div class="vc-pulse-ring"></div>
-                <div class="vc-pulse-ring" style="animation-delay: 0.5s;"></div>
-                <img id="vc-call-avatar" src="">
-            </div>
-            <div id="vc-call-name" class="vc-name">对方名字</div>
-            <div class="vc-status">等待对方接听...</div>
-            
-            <!-- 挂断按钮 -->
-            <div class="vc-btn vc-btn-hangup" onclick="endVideoCall()" style="margin-top: 60px;">
-                <i class="fas fa-phone-slash"></i>
-            </div>
-        </div>
-
-        <!-- 阶段 2: 通话中 (视频底) -->
-        <div id="vc-active-layer" class="vc-active-ui">
-            <!-- 你的摄像头画面 -->
-            <video id="local-video" autoplay playsinline muted></video>
-            
-            <!-- 摄像头关闭时的黑屏提示 -->
-            <div id="vc-cam-off-mask" class="vc-cam-off-mask">
-                <i class="fas fa-video-slash" style="font-size: 30px;"></i>
-                <span>摄像头已关闭</span>
-            </div>
-
-            <!-- 对方的小头像 (假装是对方的画面) -->
-            <div class="vc-remote-win">
-                <img id="vc-remote-avatar" src="">
-            </div>
-
-            <!-- 字幕/对话气泡区 -->
-            <div id="vc-chat-area" class="vc-chat-overlay">
-                <!-- JS 会往这里插气泡 -->
-            </div>
-
-            <!-- 底部控制栏 -->
-            <div class="vc-controls">
-                <!-- 翻转镜头 -->
-                <div class="vc-btn vc-btn-sub" onclick="switchCamera()">
-                    <i class="fas fa-sync-alt"></i>
-                </div>
-                
-                <!-- 挂断 -->
-                <div class="vc-btn vc-btn-hangup" onclick="endVideoCall()">
-                    <i class="fas fa-phone-slash"></i>
-                </div>
-
-                <!-- 开关摄像头 -->
-                <div class="vc-btn vc-btn-sub" onclick="toggleCamera()" id="btn-toggle-cam">
-                    <i class="fas fa-video"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
+   
 </body>
 </html>
