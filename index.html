@@ -3494,46 +3494,44 @@ function renderChatMessages(char) {
             }
 
 
-        // === 替换开始：语音条渲染逻辑 ===
+                // === 🔴 替换这一段 (语音条逻辑) ===
         else if (msg.type === 'voice_text') {
-            // 生成唯一的ID
             const audioId = 'audio-' + msg.timestamp;
             const textId = 'vtext-' + msg.timestamp;
+            const iconId = 'icon-' + msg.timestamp; // 给图标加ID做动画用
             
-            // 伪造一个时长显示 (根据字数估算)，如果真的有语音则显示"点击播放"
-            // 这样没语音的时候看起来也是个正常的语音条，不会露馅
-            const durationText = msg.audio ? "点击播放" : (Math.ceil(msg.text.length / 3) + '"');
+            // 1. 估算时长：每3个字1秒，最少2秒
+            const textLen = (msg.text || "").length;
+            const duration = Math.min(60, Math.max(2, Math.ceil(textLen / 3))); 
             
-            // 样式逻辑：
-            // 1. onclick 改成了调用 toggleVoiceMessage
-            // 2. 下面的文字 div 加了 id 和 display:none (默认隐藏)
-            bubbleContent = `
-                <div style="display:flex; flex-direction:column; gap:5px; min-width:120px; align-items: ${msg.sender === 'me' ? 'flex-end' : 'flex-start'};">
-                    
-                    <!-- 语音条胶囊 -->
-                    <div onclick="toggleVoiceMessage('${audioId}', '${textId}')"
-                         style="background:#fff; border:1px solid #eee; border-radius:18px; padding:8px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; width:fit-content; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                        
-                        <i class="fas fa-rss" style="transform: rotate(45deg); color:${msg.audio ? '#333' : '#ccc'};"></i>
-                        
-                        <span style="font-size:12px; color:#333; font-weight:bold;">
-                            ${durationText}
-                        </span>
-                        
-                        <!-- 如果没有音频，就不显示红点，或者显示个灰色点装饰 -->
-                        <div style="width:6px; height:6px; background:${msg.audio ? '#ff4d4f' : '#eee'}; border-radius:50%;"></div>
+            // 2. 动态长度：60px ~ 200px
+            const barWidth = Math.min(200, 60 + duration * 6) + 'px';
 
-                        <audio id="${audioId}" src="${msg.audio || ''}" style="display:none;"></audio>
+            bubbleContent = `
+                <div style="display:flex; flex-direction:column; gap:5px; align-items: ${msg.sender === 'me' ? 'flex-end' : 'flex-start'};">
+                    
+                    <!-- 语音条：点击触发 toggleVoiceMessage -->
+                    <div onclick="toggleVoiceMessage('${audioId}', '${textId}', '${iconId}', ${duration})"
+                         style="background:#fff; border:1px solid #eee; border-radius:18px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; width:${barWidth}; box-shadow: 0 1px 2px rgba(0,0,0,0.05); user-select: none;">
+                        
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <i id="${iconId}" class="fas fa-rss" style="transform: rotate(45deg); font-size:15px; color:#333; transition: color 0.3s;"></i>
+                            <span style="font-size:14px; color:#333; font-weight:bold;">${duration}''</span>
+                        </div>
+                        
+                        <!-- 红点：如果有真实音频文件，显示红点 -->
+                        <div style="width:6px; height:6px; background:#ff4d4f; border-radius:50%; opacity:${(msg.audio && msg.audio.length>50) ? 1 : 0};"></div>
+
+                        <audio id="${audioId}" src="${msg.audio || ''}" style="display:none;" preload="none"></audio>
                     </div>
                     
-                    <!-- 下方文字 (默认隐藏 display:none) -->
-                    <div id="${textId}" class="msg-bubble" style="display:none; background: #ffffff; color: #666; padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.4; border: 1px solid #f0f0f0; margin-top:2px; max-width: 240px;">
+                    <!-- 下方文字：默认隐藏 (display:none) -->
+                    <div id="${textId}" class="voice-text-anim" style="display:none; background: #fff; color: #666; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; border: 1px solid #f0f0f0; margin-top:2px; max-width: 240px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
                         ${msg.text}
                     </div>
                 </div>
             `;
         }
-        // === 替换结束 ===
 
 
         else if (msg.type === 'redpacket') {
@@ -6720,69 +6718,59 @@ if (typeof sendChatMessage !== 'undefined') {
             // 全局变量：用来记录当前正在跑的倒计时，确保每次只跑一个
     let globalVoiceTimer = null; 
 
-        // ============ 最终版：纯净动态效果 (无倒计时/无变色) ============
-    function toggleVoiceMessage(audioId, textId) {
+            // ============ 全新逻辑：点击展开文字 + 播放/模拟语音 ============
+    function toggleVoiceMessage(audioId, textId, iconId, duration) {
         const textBubble = document.getElementById(textId);
-        const voiceBar = textBubble ? textBubble.previousElementSibling : null;
         const audio = document.getElementById(audioId);
+        const icon = document.getElementById(iconId);
         
-        if (!voiceBar) return;
-
-        const icon = voiceBar.querySelector('i'); // 获取声波图标
-
-        // 1. 判断是否已经是播放状态
-        const isPlaying = icon.classList.contains('voice-anim-active');
-
-        // === 全局复位 ===
-        // 无论点哪一个，先把页面上所有其他的语音停掉
-        document.querySelectorAll('.voice-anim-active').forEach(i => i.classList.remove('voice-anim-active'));
-        document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
-        // (可选) 如果你想点新的时，自动把旧的文字框收起来，加上下面这行：
-        // document.querySelectorAll('.msg-bubble[id^="vtext-"]').forEach(el => el.style.display = 'none');
-
-        // 2. 如果刚才正在播放，现在就是“暂停”操作
-        if (isPlaying) {
-            if (textBubble) textBubble.style.display = 'none'; // 收起文字
-            return; // 结束，不继续往下走了
-        }
-
-        // === 开始播放当前点击的 ===
-        
-        // 3. 加上动画类名 (开始动)
-        icon.classList.add('voice-anim-active');
-
-        // 4. 展开下方的文字内容
-        if (textBubble) textBubble.style.display = 'block';
-
-        // 5. 播放音频逻辑
-        if (audio && audio.src && audio.src !== window.location.href) {
-            // -- 有真实音频 --
-            audio.play().catch(e => console.log("播放失败", e));
-            // 播完后自动停止动画
-            audio.onended = () => {
-                icon.classList.remove('voice-anim-active');
-            };
-        } else {
-            // -- 没有音频 (模拟效果) --
-            // 简单的震动反馈
-            if (navigator.vibrate) navigator.vibrate(50);
+        // 1. 判断当前是“展开”还是“收起”
+        if (textBubble.style.display === 'none') {
+            // === 动作：展开 ===
+            textBubble.style.display = 'block'; // 显示文字
             
-            // 计算一个模拟时长 (根据显示的秒数，比如 5" 就动5秒)
-            let duration = 3000; // 默认3秒
-            const timeText = voiceBar.querySelector('span').innerText;
-            if (timeText.includes('"')) {
-                duration = parseInt(timeText) * 1000;
+            // A. 先把别的正在播的都停掉 (互斥，防止同时播两个)
+            document.querySelectorAll('.voice-anim-active').forEach(i => i.classList.remove('voice-anim-active'));
+            document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+
+            // B. 开始播放当前这个
+            // 判断音频是否存在且有效
+            if (audio && audio.src && audio.src !== window.location.href && audio.src.length > 20) {
+                // --- 有真实录音 ---
+                // 图标开始跳动
+                if(icon) icon.classList.add('voice-anim-active');
+                // 播放声音
+                audio.play().catch(e => console.log("播放失败", e));
+                
+                // 播完后停止跳动
+                audio.onended = () => {
+                    if(icon) icon.classList.remove('voice-anim-active');
+                };
+            } else {
+                // --- 无录音 (模拟模式) ---
+                // 图标假装跳动
+                if(icon) icon.classList.add('voice-anim-active');
+                // 手机震动一下反馈
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+                // 根据时长自动停止跳动
+                setTimeout(() => {
+                    // 只有当它还在播放状态时才移除
+                    if(icon && icon.classList.contains('voice-anim-active')) {
+                        icon.classList.remove('voice-anim-active');
+                    }
+                }, duration * 1000); 
             }
 
-            // 时间到了自动停止动画
-            setTimeout(() => {
-                // 只有当它还在播放时才移除，防止被别的操作干扰
-                if(icon.classList.contains('voice-anim-active')) {
-                    icon.classList.remove('voice-anim-active');
-                }
-            }, duration);
+        } else {
+            // === 动作：收起 ===
+            // 再次点击，收起文字，并停止播放
+            textBubble.style.display = 'none';
+            if(audio) { audio.pause(); audio.currentTime = 0; }
+            if(icon) icon.classList.remove('voice-anim-active');
         }
     }
+
 
     // ==========================================
     // ======= 新增：全局点击音效系统 (原版音效 + 无震动 + 大音量) =======
