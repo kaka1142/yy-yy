@@ -7032,13 +7032,17 @@ let localStream = null;
 let currentFacingMode = 'user'; // user=前置, environment=后置
 let isCameraOn = true;
 
-// 1. 发起视频通话 (入口)
+/// 1. 发起视频通话 (入口) - 已修复 iOS 权限问题
 function startVideoCall() {
     // 获取当前聊天对象
     if(!currentChatId) return;
     const list = JSON.parse(localStorage.getItem(CHAR_LIST_KEY) || "[]");
     const char = list.find(c => c.id == currentChatId);
     if(!char) return;
+
+    // === 关键修复：点击瞬间立刻请求摄像头 ===
+    // 苹果手机要求必须是“用户点击”才能调用摄像头，不能放在 setTimeout 里
+    initCamera(); 
 
     // 填充信息
     document.getElementById('vc-call-avatar').src = char.avatar;
@@ -7053,17 +7057,18 @@ function startVideoCall() {
     // 关闭此前的更多面板
     closeMorePanel();
 
-    // 模拟 2秒后 接通
+    // 模拟 2秒后 接通界面
     setTimeout(() => {
         document.getElementById('vc-calling-layer').style.display = 'none';
         document.getElementById('vc-active-layer').style.display = 'flex';
-        // 启动摄像头
-        initCamera();
+        
+        // 注意：这里原来的 initCamera() 已经被移到最上面了，这里删掉即可
         
         // AI 发一条开场白 (模拟)
         addVideoBubble("them", "我接通啦！能看到我吗？");
     }, 2000);
 }
+
 
 // 2. 初始化摄像头
 async function initCamera() {
