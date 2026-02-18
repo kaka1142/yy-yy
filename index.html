@@ -1873,6 +1873,100 @@
     color: #333 !important; /* 强制保持深灰色，不变红 */
 }
 
+        /* ============ 视频通话全屏弹窗 (黑白极简) ============ */
+        .vc-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 2000; display: none;
+            flex-direction: column; overflow: hidden;
+        }
+
+        /* 1. 呼叫中界面 (白底黑字) */
+        .vc-calling-ui {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: #fff; animation: fadeIn 0.3s;
+        }
+        .vc-avatar-pulse {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid #000; padding: 3px;
+            position: relative; margin-bottom: 20px;
+        }
+        .vc-avatar-pulse img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        
+        /* 呼吸动画圆圈 */
+        .vc-pulse-ring {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%; border: 1px solid #000;
+            animation: pulse-ring 2s infinite; opacity: 0;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .vc-name { font-size: 24px; font-weight: bold; color: #000; margin-bottom: 10px; }
+        .vc-status { font-size: 14px; color: #666; letter-spacing: 1px; }
+
+        /* 2. 通话中界面 (全屏视频) */
+        .vc-active-ui {
+            flex: 1; display: none; position: relative; background: #000;
+        }
+        
+        /* 摄像头画面 */
+        #local-video {
+            width: 100%; height: 100%; object-fit: cover;
+            transform: scaleX(-1); /* 默认镜像前置 */
+        }
+
+        /* 对方的小窗口 (右上角) */
+        .vc-remote-win {
+            position: absolute; top: 50px; right: 20px;
+            width: 90px; height: 120px; background: #fff;
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border: 2px solid #fff;
+        }
+        .vc-remote-win img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 底部操作栏 (悬浮) */
+        .vc-controls {
+            position: absolute; bottom: 40px; left: 0; width: 100%;
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 0 30px;
+        }
+
+        /* 圆形按钮 */
+        .vc-btn {
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; transition: transform 0.1s;
+            backdrop-filter: blur(10px);
+        }
+        .vc-btn:active { transform: scale(0.9); }
+
+        .vc-btn-sub { background: rgba(255,255,255,0.2); color: #fff; width: 50px; height: 50px; font-size: 20px; }
+        .vc-btn-hangup { background: #ff4d4f; color: #fff; width: 70px; height: 70px; font-size: 28px; }
+        
+        /* 摄像头关闭时的遮罩 */
+        .vc-cam-off-mask {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: #111; display: none; align-items: center; justify-content: center;
+            color: #555; font-size: 14px; flex-direction: column; gap: 10px;
+        }
+
+        /* 简单的对话气泡 (视频里的字幕) */
+        .vc-chat-overlay {
+            position: absolute; bottom: 130px; left: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .vc-bubble {
+            background: rgba(0,0,0,0.6); color: #fff; padding: 8px 12px;
+            border-radius: 12px; align-self: flex-start; max-width: 80%;
+            font-size: 13px; backdrop-filter: blur(5px);
+            animation: slideUp 0.3s;
+        }
+        .vc-bubble.me { align-self: flex-end; background: rgba(255,255,255,0.8); color: #000; }
+
     </style>
 </head>
 <body>
@@ -2564,10 +2658,11 @@
                         <div class="wc-more-icon"><i class="far fa-image"></i></div>
                         <span class="wc-more-label">图片</span>
                     </div>
-                    <div class="wc-more-item" onclick="alert('视频功能开发中')">
+                                        <div class="wc-more-item" onclick="startVideoCall()">
                         <div class="wc-more-icon"><i class="fas fa-video"></i></div>
                         <span class="wc-more-label">视频</span>
                     </div>
+
                     <div class="wc-more-item" onclick="alert('语音功能开发中')">
                         <div class="wc-more-icon"><i class="fas fa-microphone"></i></div>
                         <span class="wc-more-label">语音</span>
@@ -6932,6 +7027,130 @@ function checkActivationCode() {
     }
 }
 
+/* ============ 视频通话逻辑 (核心部分) ============ */
+let localStream = null;
+let currentFacingMode = 'user'; // user=前置, environment=后置
+let isCameraOn = true;
+
+// 1. 发起视频通话 (入口)
+function startVideoCall() {
+    // 获取当前聊天对象
+    if(!currentChatId) return;
+    const list = JSON.parse(localStorage.getItem(CHAR_LIST_KEY) || "[]");
+    const char = list.find(c => c.id == currentChatId);
+    if(!char) return;
+
+    // 填充信息
+    document.getElementById('vc-call-avatar').src = char.avatar;
+    document.getElementById('vc-call-name').innerText = char.name;
+    document.getElementById('vc-remote-avatar').src = char.avatar;
+
+    // 显示呼叫界面
+    document.getElementById('video-call-overlay').style.display = 'flex';
+    document.getElementById('vc-calling-layer').style.display = 'flex';
+    document.getElementById('vc-active-layer').style.display = 'none';
+    
+    // 关闭此前的更多面板
+    closeMorePanel();
+
+    // 模拟 2秒后 接通
+    setTimeout(() => {
+        document.getElementById('vc-calling-layer').style.display = 'none';
+        document.getElementById('vc-active-layer').style.display = 'flex';
+        // 启动摄像头
+        initCamera();
+        
+        // AI 发一条开场白 (模拟)
+        addVideoBubble("them", "我接通啦！能看到我吗？");
+    }, 2000);
+}
+
+// 2. 初始化摄像头
+async function initCamera() {
+    const videoEl = document.getElementById('local-video');
+    
+    // 如果已有流，先关掉
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+    }
+
+    try {
+        const constraints = {
+            video: { facingMode: currentFacingMode },
+            audio: false // 先不搞麦克风，避免回音啸叫
+        };
+        
+        localStream = await navigator.mediaDevices.getUserMedia(constraints);
+        videoEl.srcObject = localStream;
+        
+        // 如果是前置摄像头，加镜像效果；后置则不加
+        videoEl.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'none';
+        
+        // 恢复摄像头开关状态
+        const videoTrack = localStream.getVideoTracks()[0];
+        videoTrack.enabled = isCameraOn;
+
+    } catch (err) {
+        console.error("摄像头启动失败:", err);
+        alert("无法访问摄像头，请检查权限");
+    }
+}
+
+// 3. 翻转摄像头 (前/后)
+function switchCamera() {
+    currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
+    initCamera();
+}
+
+// 4. 开关摄像头 (画面黑屏)
+function toggleCamera() {
+    if (!localStream) return;
+    const videoTrack = localStream.getVideoTracks()[0];
+    
+    isCameraOn = !isCameraOn;
+    videoTrack.enabled = isCameraOn;
+
+    // UI 变化
+    const btnIcon = document.querySelector('#btn-toggle-cam i');
+    const mask = document.getElementById('vc-cam-off-mask');
+    
+    if (isCameraOn) {
+        btnIcon.className = "fas fa-video"; // 图标变开
+        mask.style.display = "none";
+    } else {
+        btnIcon.className = "fas fa-video-slash"; // 图标变关
+        mask.style.display = "flex";
+    }
+}
+
+// 5. 挂断
+function endVideoCall() {
+    // 停止摄像头
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+    }
+    // 隐藏界面
+    document.getElementById('video-call-overlay').style.display = 'none';
+    
+    // (后续在这里添加：把视频期间的对话存入聊天记录)
+}
+
+// 6. 视频里的气泡辅助函数
+function addVideoBubble(sender, text) {
+    const container = document.getElementById('vc-chat-area');
+    const bubble = document.createElement('div');
+    bubble.className = `vc-bubble ${sender === 'me' ? 'me' : ''}`;
+    bubble.innerText = text;
+    container.appendChild(bubble);
+    
+    // 3秒后自动消失，保持界面干净
+    setTimeout(() => {
+        bubble.style.opacity = '0';
+        setTimeout(() => bubble.remove(), 500);
+    }, 4000);
+}
+
     </script>
         <!-- ============ 自定义提示弹窗 ============ -->
     <div id="custom-alert-overlay" class="wc-custom-alert">
@@ -7260,6 +7479,66 @@ function checkActivationCode() {
                     </div>
                      
 
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ 视频通话全屏组件 ============ -->
+    <div id="video-call-overlay" class="vc-overlay">
+        
+        <!-- 阶段 1: 呼叫等待 (白底) -->
+        <div id="vc-calling-layer" class="vc-calling-ui">
+            <div class="vc-avatar-pulse">
+                <div class="vc-pulse-ring"></div>
+                <div class="vc-pulse-ring" style="animation-delay: 0.5s;"></div>
+                <img id="vc-call-avatar" src="">
+            </div>
+            <div id="vc-call-name" class="vc-name">对方名字</div>
+            <div class="vc-status">等待对方接听...</div>
+            
+            <!-- 挂断按钮 -->
+            <div class="vc-btn vc-btn-hangup" onclick="endVideoCall()" style="margin-top: 60px;">
+                <i class="fas fa-phone-slash"></i>
+            </div>
+        </div>
+
+        <!-- 阶段 2: 通话中 (视频底) -->
+        <div id="vc-active-layer" class="vc-active-ui">
+            <!-- 你的摄像头画面 -->
+            <video id="local-video" autoplay playsinline muted></video>
+            
+            <!-- 摄像头关闭时的黑屏提示 -->
+            <div id="vc-cam-off-mask" class="vc-cam-off-mask">
+                <i class="fas fa-video-slash" style="font-size: 30px;"></i>
+                <span>摄像头已关闭</span>
+            </div>
+
+            <!-- 对方的小头像 (假装是对方的画面) -->
+            <div class="vc-remote-win">
+                <img id="vc-remote-avatar" src="">
+            </div>
+
+            <!-- 字幕/对话气泡区 -->
+            <div id="vc-chat-area" class="vc-chat-overlay">
+                <!-- JS 会往这里插气泡 -->
+            </div>
+
+            <!-- 底部控制栏 -->
+            <div class="vc-controls">
+                <!-- 翻转镜头 -->
+                <div class="vc-btn vc-btn-sub" onclick="switchCamera()">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                
+                <!-- 挂断 -->
+                <div class="vc-btn vc-btn-hangup" onclick="endVideoCall()">
+                    <i class="fas fa-phone-slash"></i>
+                </div>
+
+                <!-- 开关摄像头 -->
+                <div class="vc-btn vc-btn-sub" onclick="toggleCamera()" id="btn-toggle-cam">
+                    <i class="fas fa-video"></i>
+                </div>
             </div>
         </div>
     </div>
