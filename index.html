@@ -4543,29 +4543,26 @@ ${voiceExtraPrompt}
             // ============ 补丁结束 ============
         
         
-                // --- 保存消息到本地 ---
+        // --- 保存消息到本地 ---
 
-        // 1. 核心判断：只要设置里开了语音开关，就强制用语音条模式
-        // 这样点击语音条，就会展开显示下面的文字，而不是碎成一堆气泡
         const isVoiceMode = shouldSendVoice; 
 
-        // 2. 合并文字：把所有碎片拼接成完整的一段话，防止刷屏
-        let fullText = aiReply.replace(/\|\|\|/g, " ").trim();
-        
-        // 3. 清洗文字：去掉可能残留的标签
-        fullText = fullText.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').trim();
-        if(!fullText) fullText = "..."; 
-
         if (isVoiceMode) {
-            // ============ 【语音条模式】 ============
-            // 无论有没有真的声音，都显示为语音条
-            // 逻辑：点击语音条 -> (有声音播声音 / 没声音假装震动) -> 同时展开下方文字
+            // ============ 【场景1：语音模式】 ============
+            // 需求：点开看文字时，是一句完整连贯的话，不要分段，不要换行。
+            // 动作：把 AI 生成的 ||| (分隔符) 全部替换成逗号或空格，变成一整句。
+            
+            let fullText = aiReply.replace(/\|\|\|/g, "，").trim(); // 把分隔符变成逗号
+            
+            // 清洗掉可能存在的标签
+            fullText = fullText.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').trim();
+            if(!fullText) fullText = "..."; 
+
             const newMsg = {
                 sender: 'them',
-                text: fullText, 
+                text: fullText, // 这里存的是：连贯的一整段话
                 timestamp: Date.now(),
                 quote: null,
-                // 如果有真实音频数据就存，没有就是 null (前端会自动处理为模拟模式)
                 audio: (typeof audioBase64 !== 'undefined' && audioBase64) ? audioBase64 : null,
                 type: 'voice_text' 
             };
@@ -4574,20 +4571,34 @@ ${voiceExtraPrompt}
             messages.push(newMsg);
 
         } else {
-            // ============ 【纯文字模式】 ============
-            // 如果用户关了语音开关，就发普通气泡
-            // 也是强制合并成一条，不再切碎
-            const newMsg = {
-                sender: 'them',
-                text: fullText, 
-                timestamp: Date.now(),
-                quote: null,
-                audio: null,
-                type: 'text'
-            };
+            // ============ 【场景2：普通文字模式】 ============
+            // 需求：必须遵守自定义条数，必须分气泡！
+            // 动作：严格按照 ||| 切割！你设了5条，AI回了5段，这里就切成5个气泡。
             
-            if (shouldQuote && quoteData) newMsg.quote = quoteData;
-            messages.push(newMsg);
+            const bubbles = aiReply.split('|||').filter(b => b.trim());
+        
+            if (bubbles.length > 0) {
+                bubbles.forEach((bubbleText, index) => {
+                    if(bubbleText) { 
+                        let content = bubbleText;
+                        content = content.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').trim();
+                        if(!content) return;
+
+                        const newMsg = {
+                            sender: 'them',
+                            text: content, // 这里存的是：切分后的每一小句
+                            timestamp: Date.now() + index * 10,
+                            quote: null,
+                            audio: null,
+                            type: 'text'
+                        };
+                        
+                        // 只在第一条气泡带引用
+                        if (index === 0 && shouldQuote && quoteData) newMsg.quote = quoteData;
+                        messages.push(newMsg);
+                    }
+                });
+            }
         }
 
 
