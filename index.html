@@ -612,30 +612,51 @@
 			gap: 15px;
 		}
 
-		/* 模拟便利贴 */
+				/* 模拟便利贴 (修改版：拍立得风格) */
 		.me-sticky-note {
 			width: 100%;
-			height: 70px;
-			background: #fdfdfd;
-			border: 1px solid #eee;
-			border-radius: 10px; /* 有点圆角 */
+			height: 85px;  /* 稍微加高一点，让图片显示更多 */
+			background: #fff;
+			
+			/* === 关键修改：增加白边和阴影 === */
+			border: 4px solid #fff;  /* 像照片一样的白边 */
+			outline: 1px solid #e0e0e0; /* 外围一圈细灰线，防止白边看不清 */
+			border-radius: 4px;      /* 圆角改小一点，像照片纸 */
+			
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			position: relative;
-			box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+			
+			/* 增加投影，让它浮起来 */
+			box-shadow: 3px 5px 15px rgba(0,0,0,0.12);
+			
+			/* 稍微歪一点点，更有生活感 (不喜欢可以删掉这一行) */
+			transform: rotate(1.5deg); 
+			
+			overflow: hidden; /* 确保图片不溢出 */
 		}
-		/* 模拟胶带 */
+
+				/* 模拟胶带 (修改版：半透明磨砂感) */
 		.me-sticky-tape {
 			position: absolute;
-			top: -5px;
+			top: -8px;
 			left: 50%;
-			transform: translateX(-50%) rotate(-2deg);
-			width: 30px;
-			height: 10px;
-			background: rgba(0,0,0,0.05);
+			transform: translateX(-50%) rotate(-2deg); /* 胶带也歪一点 */
+			width: 35px;
+			height: 12px;
+			
+			/* 半透明白色，带一点点模糊 */
+			background: rgba(255, 255, 255, 0.4); 
+			backdrop-filter: blur(2px);
+			border-left: 1px solid rgba(255,255,255,0.8);
+			border-right: 1px solid rgba(255,255,255,0.8);
+			
+			/* 胶带的投影 */
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+			z-index: 20; /* 确保盖在图片上面 */
 		}
-		.me-kaomoji { font-size: 16px; color: #666; letter-spacing: 2px; }
+
 
 		/* 右侧小菜单 */
 		.me-mini-menu {
@@ -2209,7 +2230,391 @@
 
 
 
+		/* ========== 通讯录圆角卡片风 ========== */
+		.contact-card-group {
+			margin: 0 20px 15px 20px;
+			background: #fff;
+			border-radius: 20px; /* 大圆角 */
+			box-shadow: 0 4px 15px rgba(0,0,0,0.03); /* 极软的阴影 */
+			overflow: hidden;
+		}
+		
+		.contact-card-header {
+			padding: 18px 20px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background: #fff;
+			cursor: pointer;
+			font-size: 15px;
+			font-weight: bold;
+			color: #000;
+			transition: background 0.2s;
+		}
+		.contact-card-header:active { background: #f9f9f9; }
+		
+		.contact-card-arrow { color: #ccc; font-size: 12px; transition: transform 0.3s; }
+		.contact-card-arrow.open { transform: rotate(90deg); }
+		
+		.contact-card-body {
+			display: none;
+			background: #fff;
+			padding: 0 20px;
+			border-top: 1px solid #f9f9f9;
+		}
+		.contact-card-body.show { display: block; animation: fadeIn 0.3s ease; }
+		@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+		
+		.contact-user-item {
+			display: flex;
+			align-items: center;
+			padding: 12px 0;
+			border-bottom: 1px solid #f5f5f5;
+			cursor: pointer;
+		}
+		.contact-user-item:last-child { border-bottom: none; }
+		.contact-user-item:active { opacity: 0.7; }
+		
+		.contact-user-avatar {
+			width: 42px; height: 42px;
+			border-radius: 12px; /* 和聊天列表一样的头像框 */
+			object-fit: cover;
+			margin-right: 12px;
+			background: #eee;
+		}
+		
+		.contact-user-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+		.contact-user-name { font-size: 14px; font-weight: bold; color: #000; }
+		.contact-user-desc { font-size: 11px; color: #888; }
 
+		/* 详情名片弹窗 */
+		.card-modal-overlay {
+			position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+			background: rgba(0,0,0,0.4); /* 半透明黑底 */
+			z-index: 600;
+			display: none;
+			align-items: center;
+			justify-content: center;
+		}
+		.card-profile-box {
+			width: 80%; background: #fff; border-radius: 24px; padding: 25px;
+			display: flex; flex-direction: column; align-items: center;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			position: relative;
+			animation: popIn 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+		}
+
+		/* ========== 新建人物页：极简白黑杂志风 ========== */
+		.mg-form-layout {
+			padding: 20px 30px;
+			display: flex;
+			flex-direction: column;
+			gap: 30px;
+			background: #fff;
+			min-height: 100%;
+		}
+
+		/* 顶部大标题 */
+		.mg-page-title {
+			font-size: 24px;
+			font-weight: 900;
+			color: #000;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			margin-bottom: 10px;
+			font-family: 'Georgia', serif;
+			text-align: center;
+		}
+
+		/* 头像上传区 (极简线框) */
+		.mg-upload-wrapper {
+			align-self: center;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 10px;
+		}
+		.mg-upload-square {
+			width: 100px; height: 100px;
+			border: 1px solid #ddd; /* 极细灰线 */
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			position: relative;
+			transition: border-color 0.3s;
+		}
+		.mg-upload-square:hover { border-color: #000; }
+		
+		.mg-upload-img {
+			width: 100%; height: 100%; object-fit: cover;
+			display: none; /* 有图时显示 */
+		}
+		.mg-upload-icon { font-size: 20px; color: #ccc; font-weight: lighter; }
+
+		/* 输入框组 (线条风格) */
+		.mg-input-row {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+		
+		.mg-label {
+			font-size: 10px;
+			color: #999;
+			font-weight: bold;
+			letter-spacing: 1px;
+			text-transform: uppercase;
+		}
+
+		/* 核心：把输入框变成一条线 */
+		.mg-line-input {
+			width: 100%;
+			padding: 10px 0;
+			border: none;
+			border-bottom: 1px solid #eee; /* 底部细线 */
+			outline: none;
+			font-size: 15px;
+			color: #000;
+			background: transparent;
+			font-family: -apple-system, sans-serif;
+			transition: border-color 0.3s;
+			border-radius: 0; /* 去除圆角 */
+		}
+		.mg-line-input:focus { border-bottom: 1px solid #000; } /* 聚焦变黑 */
+
+
+		/* 专门给长文本用的输入框 */
+		.mg-textarea {
+			width: 100%;
+			height: 90px; /* 高度加高，方便写长文 */
+			padding: 10px 0;
+			border: none;
+			border-bottom: 1px solid #eee; /* 只有底部有线 */
+			outline: none;
+			font-size: 14px;
+			line-height: 1.6; /* 行间距拉大，像阅读杂志 */
+			color: #000;
+			background: transparent;
+			resize: none; /* 禁止手动拖动大小 */
+			font-family: -apple-system, sans-serif;
+		}
+		.mg-textarea:focus { border-bottom: 1px solid #000; } /* 选中变黑 */
+		
+		/* 下拉选择器 */
+		.mg-select {
+			width: 100%;
+			padding: 10px 0;
+			border: none;
+			border-bottom: 1px solid #eee;
+			background: transparent;
+			font-size: 15px;
+			color: #000;
+			outline: none;
+			border-radius: 0;
+			-webkit-appearance: none; /* 去掉默认箭头 */
+		}
+
+		/* 底部保存按钮 (纯黑方块) */
+		.mg-save-btn {
+			margin-top: 20px;
+			width: 100%;
+			padding: 16px;
+			background: #000;
+			color: #fff;
+			font-size: 14px;
+			font-weight: bold;
+			letter-spacing: 2px;
+			text-align: center;
+			cursor: pointer;
+			border: 1px solid #000;
+			transition: all 0.2s;
+		}
+		.mg-save-btn:active { background: #fff; color: #000; }
+		
+				.mg-cancel-text {
+			text-align: center;
+			font-size: 12px;
+			color: #999;
+			text-decoration: underline;
+			cursor: pointer;
+			
+			/* === 修改：往上调了一点 === */
+			margin-top: 15px;      /* 原来是 25px，改成 15px 就上去了 */
+			padding-bottom: 20px;  /* 原来是 40px，底部的空白也收紧一点 */
+			padding-top: 10px;    
+			display: block;
+		}
+
+
+/* ============ 记忆档案 (Memory Archive) 样式 ============ */
+.mem-app {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #ffffff; /* 纯白底色 */
+    z-index: 300; display: none; flex-direction: column;
+    font-family: 'Georgia', serif; /* 衬线字体，更有杂志感 */
+    color: #000;
+}
+
+.mem-header {
+    padding: 20px 25px; padding-top: 50px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.mem-header-title { font-size: 24px; font-weight: 900; letter-spacing: 1px; }
+
+/* 控制面板 */
+.mem-control-panel { padding: 0 25px; margin-bottom: 30px; }
+.mem-control-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+.mem-label-group { display: flex; flex-direction: column; }
+.mem-big-lbl { font-size: 16px; font-weight: bold; font-family: sans-serif; }
+.mem-sub-lbl { font-size: 10px; color: #666; font-family: sans-serif; margin-top: 2px; }
+.mem-line { width: 100%; height: 1px; background: #eee; }
+.mem-num-input {
+    width: 60px; padding: 5px; border: 2px solid #000; 
+    text-align: center; font-weight: bold; font-size: 16px; outline: none;
+}
+
+/* 列表区 */
+.mem-section-title { padding: 0 25px; display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: bold; letter-spacing: 2px; color: #999; font-family: sans-serif; }
+.mem-line-long { flex: 1; height: 1px; background: #000; }
+.mem-list { flex: 1; overflow-y: auto; padding: 20px 25px; display: flex; flex-direction: column; gap: 15px; }
+
+/* 角色卡片 (极简黑白) */
+.mem-card {
+    display: flex; align-items: center; gap: 15px;
+    padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer;
+}
+.mem-card-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; filter: grayscale(100%); transition: filter 0.3s; }
+.mem-card:hover .mem-card-avatar { filter: grayscale(0%); } /* 悬停变彩色 */
+
+.mem-card-info { flex: 1; }
+.mem-card-name { font-size: 18px; font-weight: bold; }
+.mem-card-preview { font-size: 12px; color: #666; margin-top: 4px; font-family: sans-serif; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* 详情弹窗 */
+.mem-modal {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 310; display: none;
+    align-items: flex-end; /* 从底部弹出 */
+}
+.mem-modal-content {
+    width: 100%; height: 85%; background: #fff;
+    border-top-left-radius: 20px; border-top-right-radius: 20px;
+    padding: 30px; display: flex; flex-direction: column;
+    animation: slideUp 0.3s ease-out;
+}
+.mem-modal-header { display: flex; justify-content: space-between; align-items: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+
+.mem-summary-box { flex: 1; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.mem-box-label { font-size: 10px; font-weight: bold; color: #999; letter-spacing: 1px; }
+.mem-textarea {
+    flex: 1; border: 1px solid #000; padding: 15px; font-size: 14px; line-height: 1.6;
+    font-family: sans-serif; resize: none; outline: none; border-radius: 0;
+}
+
+.mem-actions { border-top: 1px solid #eee; padding-top: 20px; }
+.mem-action-row { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 12px; margin-bottom: 15px; font-family: sans-serif; }
+.mem-btn-black {
+    width: 100%; background: #000; color: #fff; padding: 15px;
+    font-size: 14px; font-weight: bold; letter-spacing: 1px; border: none; cursor: pointer;
+}
+.mem-btn-black:active { transform: scale(0.98); }
+
+/* ============ 记忆档案升级样式 (卡片流) ============ */
+.mem-cards-area {
+    flex: 1; overflow-y: auto; padding: 10px 5px;
+    display: flex; flex-direction: column; gap: 15px;
+}
+
+/* 单个记忆卡片 */
+.mem-record-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-left: 3px solid #000; /* 左侧黑条装饰 */
+    padding: 15px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    transition: transform 0.2s;
+}
+.mem-record-card:active { transform: scale(0.99); }
+
+.mem-card-date {
+    font-size: 10px; color: #999; font-weight: bold; font-family: sans-serif;
+    margin-bottom: 6px; display: flex; justify-content: space-between;
+}
+.mem-card-content {
+    font-size: 13px; color: #333; line-height: 1.6; font-family: sans-serif;
+    white-space: pre-wrap;
+}
+
+/* ============ 杂志风弹窗样式 ============ */
+.mem-dialog-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.8); /* 白色半透明遮罩，更有杂志感 */
+    backdrop-filter: blur(5px);
+    z-index: 320; /* 比详情页高 */
+    display: none; align-items: center; justify-content: center;
+}
+
+.mem-dialog-box {
+    width: 85%; background: #fff;
+    border: 2px solid #000; /* 粗黑框 */
+    padding: 25px;
+    box-shadow: 10px 10px 0px rgba(0,0,0,0.1); /* 硬阴影 */
+    display: flex; flex-direction: column; gap: 15px;
+    animation: popIn 0.2s ease-out;
+}
+
+.mem-dialog-title {
+    font-size: 18px; font-weight: 900; letter-spacing: 1px; 
+    text-transform: uppercase; font-family: 'Georgia', serif;
+}
+
+.mem-dialog-line { width: 50px; height: 3px; background: #000; }
+
+.mem-dialog-textarea {
+    width: 100%; height: 120px;
+    border: 1px solid #ccc; background: #f9f9f9;
+    padding: 10px; font-size: 14px; line-height: 1.6;
+    outline: none; resize: none; font-family: sans-serif;
+}
+.mem-dialog-textarea:focus { border-color: #000; background: #fff; }
+
+.mem-dialog-buttons {
+    display: flex; justify-content: space-between; align-items: center; margin-top: 10px;
+}
+
+/* 空心按钮 */
+.mem-btn-outline {
+    background: transparent; border: 1px solid #000;
+    padding: 8px 12px; font-size: 10px; font-weight: bold;
+    cursor: pointer; letter-spacing: 1px;
+}
+/* 实心按钮 */
+.mem-btn-fill {
+    background: #000; color: #fff; border: 1px solid #000;
+    padding: 8px 20px; font-size: 10px; font-weight: bold;
+    cursor: pointer; letter-spacing: 1px;
+}
+
+/* 底部工具栏 */
+.mem-bottom-tools {
+    border-top: 1px solid #eee; padding-top: 15px; margin-top: 10px;
+}
+.mem-add-bar {
+    width: 100%; padding: 12px;
+    border: 1px dashed #000;
+    text-align: center; font-size: 12px; font-weight: bold;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.mem-add-bar:active { background: #f9f9f9; }
+
+.mem-btn-small {
+    background: #000; color: #fff; padding: 8px 15px;
+    font-size: 12px; font-weight: bold; border: none; cursor: pointer;
+}
+		
 	</style>
 </head>
 <body>
@@ -2586,55 +2991,148 @@
 				</div>
 			</div>
 
-						<!-- ============ 页面：新建人物 (Add Character) ============ -->
-			<div id="wc-view-add" class="wc-view-section" style="overflow-y: auto;">
-				<div class="wc-form-container">
-					
-					<!-- 1. 正方形头像上传框 -->
-					<div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-						<label class="wc-upload-box">
-							<i class="fas fa-plus" id="upload-icon"></i>
-							<img src="" id="new-char-img">
-							<input type="file" accept="image/*" onchange="handleNewCharImage(event)">
+								<!-- ============ 页面：新建人物 (Magazine Style) ============ -->
+			<div id="wc-view-add" class="wc-view-section" style="background:#fff; overflow-y:auto;">
+				
+				<div class="mg-form-layout">
+					<!-- 标题 -->
+					<div class="mg-page-title">NEW CHARACTER</div>
+
+					<!-- 头像上传 -->
+					<div class="mg-upload-wrapper">
+						<label class="mg-upload-square">
+							<i class="fas fa-plus mg-upload-icon" id="upload-icon"></i>
+							<img src="" id="new-char-img" class="mg-upload-img">
+							<input type="file" accept="image/*" style="display:none;" onchange="handleNewCharImage(event)">
 						</label>
-						<div style="font-size: 11px; color: #999;">点击上传头像</div>
+						<div style="font-size:10px; color:#ccc; letter-spacing:1px;">UPLOAD AVATAR</div>
 					</div>
 
-					<!-- 2. 图片URL -->
-					<div class="wc-input-group">
-						<div class="wc-input-label">头像链接 (可选)</div>
-						<input type="text" class="wc-input" id="new-char-url" placeholder="https://..." oninput="previewUrlImage(this.value)">
+					<!-- 1. 名字 -->
+					<div class="mg-input-row">
+						<div class="mg-label">NAME / 昵称</div>
+						<input type="text" class="mg-line-input" id="new-char-name" placeholder="Name">
 					</div>
 
-					<!-- 3. 名字 -->
-					<div class="wc-input-group">
-						<div class="wc-input-label">人物昵称</div>
-						<input type="text" class="wc-input" id="new-char-name" placeholder="请输入名字">
-					</div>
-
-					<!-- 4. 人设 -->
-					<div class="wc-input-group">
-						<div class="wc-input-label">人物设定 / 签名</div>
-						<textarea class="wc-input" id="new-char-persona" rows="4" placeholder="请输入人设或个性签名..."></textarea>
-					</div>
-
-					<!-- 黑色保存按钮 -->
-					<button class="wc-btn-black" onclick="saveNewCharacter()">保存人物</button>
-					<div style="text-align:center; color:#999; font-size:12px; margin-top:10px; cursor:pointer;" onclick="cancelAddChar()">取消</div>
-				</div>
-			</div>
-
-			<!-- ============ 页面 2：日记 (Diary) ============ -->
-			<div id="wc-view-diary" class="wc-view-section">
-				<div class="wc-list-container" style="margin-top: 10px;">
-					<div class="wc-item">
-						<div class="wc-content">
-							<span class="wc-name">今天的心情</span>
-							<span class="wc-msg">在这里记录你的日记...</span>
+					<!-- 2. 分组选择 (新增功能) -->
+					<div class="mg-input-row">
+						<div class="mg-label">GROUP / 分组</div>
+						<div style="position:relative;">
+							<select id="new-char-group-select" class="mg-select">
+								<!-- JS 自动生成选项 -->
+							</select>
+							<i class="fas fa-chevron-down" style="position:absolute; right:0; top:10px; font-size:12px; color:#ccc; pointer-events:none;"></i>
 						</div>
 					</div>
+
+										<!-- 3. 人设 (改为多行) -->
+					<div class="mg-input-row">
+						<div class="mg-label">PERSONA / 设定</div>
+						<!-- 注意：这里换成了 textarea -->
+						<textarea class="mg-textarea" id="new-char-persona" placeholder="在这里输入详细的人设、性格、背景故事... (支持换行)"></textarea>
+					</div>
+
+
+					<!-- 4. 图片链接 -->
+					<div class="mg-input-row">
+						<div class="mg-label">IMAGE URL (OPTIONAL)</div>
+						<input type="text" class="mg-line-input" id="new-char-url" placeholder="https://..." oninput="previewUrlImage(this.value)">
+					</div>
+
+					<!-- 按钮区域 -->
+					<div>
+						<div class="mg-save-btn" onclick="saveNewCharacter()">SAVE PROFILE</div>
+						<div class="mg-cancel-text" onclick="cancelAddChar()">CANCEL</div>
+					</div>
 				</div>
 			</div>
+
+
+						<!-- ============ 页面 2：通讯录 (Card Style) ============ -->
+			<div id="wc-view-contacts" class="wc-view-section" style="background: #f7f7f7;">
+				
+				<!-- 顶部子导航栏 (复用消息页的加号风格) -->
+				<div style="padding: 15px 20px 5px 20px; display:flex; justify-content:space-between; align-items:center;">
+					<div style="font-size:13px; color:#888; font-weight:bold; margin-left:5px;">我的分组</div>
+					<div onclick="createNewGroup()" style="width:30px; height:30px; background:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+						<i class="fas fa-plus" style="color:#000; font-size:14px;"></i>
+					</div>
+				</div>
+
+				<!-- 列表容器 -->
+				<div id="contact-list-container" style="flex:1; overflow-y:auto; padding-bottom:80px; padding-top: 10px;">
+					<!-- JS 生成的内容 -->
+				</div>
+			</div>
+
+			<!-- ============ 附加：新建分组弹窗 (圆角卡片风) ============ -->
+			<div id="create-group-modal" class="card-modal-overlay">
+				<div class="card-profile-box" style="width: 80%; padding: 30px;">
+					<div style="font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #000;">新建分组</div>
+					
+					<!-- 输入框 -->
+					<input type="text" id="new-group-input" placeholder="输入分组名称 (如: 家人)" 
+						   style="width: 100%; padding: 15px; background: #f9f9f9; border: none; border-radius: 12px; font-size: 15px; margin-bottom: 25px; outline: none;">
+					
+					<!-- 按钮组 -->
+					<div style="display: flex; gap: 15px; width: 100%;">
+						<div onclick="closeCreateGroupModal()" style="flex:1; padding:12px; background:#f0f0f0; color:#333; border-radius:12px; text-align:center; font-weight:bold; cursor:pointer;">取消</div>
+						<div onclick="confirmCreateGroup()" style="flex:1; padding:12px; background:#000; color:#fff; border-radius:12px; text-align:center; font-weight:bold; cursor:pointer;">创建</div>
+					</div>
+				</div>
+			</div>
+
+						<!-- ============ 附加：人物详情 (精致杂志卡片·固定大小版) ============ -->
+			<div id="contact-detail-modal" class="card-modal-overlay">
+				
+				<!-- 卡片容器：固定最大高度，超出显示滚动条 -->
+				<div class="mg-fixed-card" style="width: 85%; max-height: 65vh; background: #fff; border-radius: 4px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.15);">
+					
+					<!-- 1. 顶部：头像与名字 (固定不动) -->
+					<div style="padding: 25px 25px 15px 25px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 15px; background: #fff;">
+						<img id="cd-avatar" src="" style="width: 60px; height: 60px; object-fit: cover; border: 1px solid #eee; padding: 2px;">
+						<div style="flex: 1;">
+							<div id="cd-name" style="font-family: 'Georgia', serif; font-size: 20px; font-weight: 900; color: #000; letter-spacing: 0.5px;">NAME</div>
+							<div style="font-size: 10px; color: #999; letter-spacing: 1px; margin-top: 4px; text-transform: uppercase;">PROFILE & DETAILS</div>
+						</div>
+						<!-- 关闭按钮 -->
+						<div onclick="closeContactDetail()" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+							<i class="fas fa-times" style="color: #000; font-size: 18px;"></i>
+						</div>
+					</div>
+
+					<!-- 2. 中间：滚动文字区 (核心修改点) -->
+					<div style="flex: 1; overflow-y: auto; padding: 25px;">
+						<!-- 装饰性标签 -->
+						<div style="font-size: 10px; font-weight: bold; color: #ccc; margin-bottom: 10px; letter-spacing: 2px;">PERSONA / 设定</div>
+						
+						<!-- 真正的文字内容 -->
+						<div id="cd-persona" style="font-size: 14px; line-height: 1.8; color: #333; font-family: -apple-system, serif; text-align: justify;">
+							<!-- 内容由 JS 填充 -->
+						</div>
+					</div>
+
+					<!-- 3. 底部：操作区 (固定不动) -->
+					<div style="padding: 15px 25px; border-top: 1px solid #f0f0f0; background: #fff;">
+						
+						<!-- 分组选择 (极简风) -->
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 12px;">
+							<span style="color: #999; font-weight: bold;">GROUP</span>
+							<select id="cd-group-select" onchange="saveContactGroupChange()" style="border: none; background: transparent; font-weight: bold; color: #000; text-align: right; outline: none;">
+								<!-- JS 生成 -->
+							</select>
+						</div>
+
+						<div onclick="editContactFromDetail()" style="background: #000; color: #fff; text-align: center; padding: 14px; font-size: 13px; font-weight: bold; letter-spacing: 1px; cursor: pointer; transition: opacity 0.2s;">
+    EDIT PROFILE / 编辑资料
+</div>
+
+					</div>
+
+				</div>
+			</div>
+
+
 
 			<!-- ============ 页面 3：动态 (Moments) ============ -->
 			<div id="wc-view-moments" class="wc-view-section">
@@ -2691,11 +3189,25 @@
 
 														<!-- === 右栏 === -->
 							<div class="me-col-right">
-								<!-- 便利贴 -->
-								<div class="me-sticky-note">
-									<div class="me-sticky-tape"></div>
-									<span class="me-kaomoji" contenteditable="true">_(:3」∠)_</span>
-								</div>
+								<!-- 便利贴 (图片版) -->
+<label class="me-sticky-note" style="cursor: pointer; overflow: hidden; padding: 0; position: relative;">
+    <!-- 胶带保留 -->
+    <div class="me-sticky-tape" style="z-index: 10;"></div>
+    
+    <!-- 图片显示区 -->
+    <img src="" id="img-sticky-note" 
+         onload="this.style.display='block'; document.getElementById('sticky-placeholder').style.display='none';"
+         style="width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; top: 0; left: 0; z-index: 1;">
+    
+    <!-- 默认显示的图片图标 -->
+    <div id="sticky-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #eee; font-size: 24px;">
+        <i class="fas fa-image"></i>
+    </div>
+
+    <!-- 隐藏的文件上传框 -->
+    <input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-sticky-note')" style="display:none;">
+</label>
+
 
 								<!-- 小菜单 (已修改为纯文字输入，且自动对齐) -->
 								<div class="me-mini-menu">
@@ -2970,9 +3482,9 @@
 					<div class="icon-circle"><i class="fas fa-comment-dots"></i></div>
 					<span>消息</span>
 				</div>
-				<div class="wc-tab" onclick="switchWeChatTab('diary', this)">
-					<div class="icon-circle"><i class="fas fa-book"></i></div> <!-- 改了个书本图标更像日记 -->
-					<span>日记</span>
+								<div class="wc-tab" onclick="switchWeChatTab('contacts', this)">
+					<div class="icon-circle"><i class="fas fa-address-book"></i></div>
+					<span>通讯录</span>
 				</div>
 				<div class="wc-tab" onclick="switchWeChatTab('moments', this)">
 					<div class="icon-circle"><i class="fas fa-atom"></i></div>
@@ -3260,10 +3772,10 @@
 				<!-- 底部 Dock 栏 (已修复：添加 ID 方便美化) -->
 		<div class="dock-container">
 			<div class="dock">
-				<!-- 这里的 ID 是关键，JS 靠它来找图标 -->
-				<div class="dock-icon" id="home-dock-1">
-					<i class="fas fa-phone"></i>
-				</div>
+				<!-- 添加了 onclick 事件 -->
+<div class="dock-icon" id="home-dock-1" onclick="toggleMemoryApp()" style="cursor: pointer;">
+    <i class="fas fa-phone"></i>
+</div>
 				<div class="dock-icon" id="home-dock-2">
 					<i class="far fa-compass"></i>
 				</div>
@@ -3272,6 +3784,103 @@
 				</div>
 			</div>
 		</div>
+
+
+<!-- ============ 记忆档案 App (升级版: 卡片流) ============ -->
+<div id="memory-app" class="mem-app">
+    <!-- 顶部导航 -->
+    <div class="mem-header">
+        <div class="mem-header-title">MEMORY ARCHIVE</div>
+        <i class="fas fa-times" onclick="toggleMemoryApp()" style="font-size: 20px; cursor: pointer;"></i>
+    </div>
+
+    <!-- 全局控制区 -->
+    <div class="mem-control-panel">
+        <div class="mem-control-row">
+            <div class="mem-label-group">
+                <div class="mem-big-lbl">AUTO SYNC</div>
+                <div class="mem-sub-lbl">自动总结开关</div>
+            </div>
+            <label class="switch-toggle">
+                <input type="checkbox" id="mem-global-switch" onchange="saveMemoryConfig()">
+            </label>
+        </div>
+        <div class="mem-line"></div>
+        <div class="mem-control-row">
+            <div class="mem-label-group">
+                <div class="mem-big-lbl">FREQUENCY</div>
+                <div class="mem-sub-lbl">每隔多少轮对话触发</div>
+            </div>
+            <input type="number" id="mem-round-input" class="mem-num-input" value="25" onchange="saveMemoryConfig()">
+        </div>
+    </div>
+
+    <!-- 角色列表标题 -->
+    <div class="mem-section-title">
+        <span>CHARACTER FILES</span>
+        <div class="mem-line-long"></div>
+    </div>
+
+    <!-- 角色列表容器 -->
+    <div id="mem-char-list" class="mem-list">
+        <!-- JS 生成内容 -->
+    </div>
+
+    <!-- ============ 新增：杂志风自定义输入/确认框 ============ -->
+    <div id="mem-custom-dialog" class="mem-dialog-overlay">
+        <div class="mem-dialog-box">
+            <div class="mem-dialog-title" id="mem-dialog-title">EDIT MEMORY</div>
+            <div class="mem-dialog-line"></div>
+            
+            <textarea id="mem-dialog-input" class="mem-dialog-textarea" placeholder="在此输入记忆内容..."></textarea>
+            
+            <div class="mem-dialog-buttons">
+                <!-- 左侧：取消 & 删除 -->
+                <div style="display:flex; gap:10px;">
+                    <button class="mem-btn-outline" onclick="closeMemDialog()">CANCEL</button>
+                    <button class="mem-btn-outline" id="mem-btn-delete" onclick="deleteMemFromDialog()" style="border-color:#ff4d4f; color:#ff4d4f; display:none;">DELETE</button>
+                </div>
+                <!-- 右侧：保存 -->
+                <button class="mem-btn-fill" onclick="saveMemDialog()">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情弹窗 (改为卡片流布局) -->
+    <div id="mem-detail-modal" class="mem-modal">
+        <div class="mem-modal-content">
+            <div class="mem-modal-header">
+                <div style="display:flex; flex-direction:column;">
+                    <span id="mem-detail-name">NAME</span>
+                    <span style="font-size:10px; color:#999; letter-spacing:1px; margin-top:5px;">MEMORY TIMELINE</span>
+                </div>
+                <i class="fas fa-chevron-down" onclick="closeMemDetail()"></i>
+            </div>
+            
+            <!-- 记忆卡片滚动区 -->
+            <div id="mem-card-container" class="mem-cards-area">
+                <!-- JS 会在这里生成一张张卡片 -->
+            </div>
+
+            <!-- 底部操作区 -->
+            <div class="mem-bottom-tools">
+                <!-- 手动添加按钮 -->
+                <div class="mem-add-bar" onclick="addNewMemoryCard()">
+                    <i class="fas fa-plus"></i>
+                    <span>ADD MANUAL MEMORY / 添加一条记忆</span>
+                </div>
+
+                <!-- 总结按钮 -->
+                <div class="mem-action-row" style="margin-top:15px; justify-content: space-between;">
+                    <div style="font-size:10px; color:#666;">
+                        回顾最近 <input type="number" id="mem-manual-count" value="50" style="width:30px; text-align:center; border-bottom:1px solid #000; border-top:none; border-left:none; border-right:none;"> 轮
+                    </div>
+                    <button class="mem-btn-small" onclick="performManualSummary()">AI SUMMARIZE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
  <!-- ============ 视频通话全屏组件 ============ -->
 	<div id="video-call-overlay" class="vc-overlay">
@@ -3349,6 +3958,7 @@
 // 1. 定义全局变量 (内存缓存，让网页跑得更快)
 const g_videoTTSPlayer = new Audio();
 let friends = [];          // 好友列表
+let contactGroups = [];
 let chatHistories = {};    // 聊天记录
 // 这一行非常重要，用来兼容你以前的聊天逻辑
 window.g_chatHistory = {}; 
@@ -3439,67 +4049,78 @@ async function migrateOldData() {
 	}
 }
 
-// 4. 核心启动函数 (全量加载版 - 已修复)
+// 4. 核心启动函数 (修复分组加载变量作用域问题)
 async function initApp() {
-	try {
-		await dbManager.init();
-		
-		// 1. 加载所有数据到全局变量
-		friends = await dbManager.getAll('friends');
-		maskList = await dbManager.getAll('masks');
-		stickerList = await dbManager.getAll('stickers');
-		worldBooks = await dbManager.getAll('worldBooks');
-		
-		// 2. 加载聊天记录
-		const allChats = await dbManager.getAll('chatHistories');
-		chatHistories = {};
-		allChats.forEach(c => { chatHistories[c.id] = c.messages; });
-		window.g_chatHistory = chatHistories;
+    try {
+        await dbManager.init();
+        
+        // 1. 加载好友、面具、表情、世界书
+        friends = await dbManager.getAll('friends');
+        maskList = await dbManager.getAll('masks');
+        stickerList = await dbManager.getAll('stickers');
+        worldBooks = await dbManager.getAll('worldBooks');
+        
+        // 2. 加载聊天记录
+        const allChats = await dbManager.getAll('chatHistories');
+        chatHistories = {};
+        allChats.forEach(c => { chatHistories[c.id] = c.messages; });
+        window.g_chatHistory = chatHistories;
 
-		// 3. 加载心智数据
-		const minds = await dbManager.getAll('mindData');
-		window.g_mindDataMap = {};
-		minds.forEach(m => { window.g_mindDataMap[m.id] = m.data; });
+        // 3. 加载心智数据
+        const minds = await dbManager.getAll('mindData');
+        window.g_mindDataMap = {};
+        minds.forEach(m => { window.g_mindDataMap[m.id] = m.data; });
 
-		// 4. 加载设置与文字
-		const settingsList = await dbManager.getAll('settings');
-		settingsList.forEach(item => {
-			// 如果是API配置
-			if (item.id === 'api_config') globalSettings = item.data;
-			// 如果是美化配置
-			if (item.id === 'beauty_config') beautyConfig = item.data;
-			// 如果是桌面可编辑文字 (txt_开头)
-			if (item.id.startsWith('txt_')) {
-				const domId = item.id.replace('txt_', '');
-				const el = document.getElementById(domId);
-				if (el) el.innerText = item.data;
-			}
-		});
+        // 4. 加载设置 (核心修复！)
+        const settingsList = await dbManager.getAll('settings');
+        
+        // === 修复A：先给全局变量赋默认值 ===
+        contactGroups = [{id:'g_default', name:'我的好友'}];
 
-		// 5. 渲染界面
-		if(typeof renderChatList === 'function') renderChatList(); 
-		
-		// 应用壁纸
-		if(beautyConfig && beautyConfig.wallpaper) {
-			document.body.style.backgroundImage = `url('${beautyConfig.wallpaper}')`;
-		}
-		
-		// 6. 恢复所有图片组件 (包括心智卡片图)
-		const allImages = await dbManager.getAll('images');
-		allImages.forEach(imgData => {
-			// 尝试恢复普通图片
-			const imgEl = document.getElementById(imgData.id);
-			if(imgEl) imgEl.src = imgData.data;
-			
-			// 特殊处理：如果是心智卡片自定义图 (mind_card_img_开头)
-			// 不需要这里处理，打开卡片时会单独读
-		});
-		
-		console.log("无限存储系统启动完毕 (全量版)！");
-	} catch (e) {
-		console.error("启动失败:", e);
-	}
+        settingsList.forEach(item => {
+            // API配置
+            if (item.id === 'api_config') globalSettings = item.data;
+            // 美化配置
+            if (item.id === 'beauty_config') beautyConfig = item.data;
+            
+            // === 修复B：直接给 contactGroups 赋值，去掉 window. 前缀，确保读入变量 ===
+            if (item.id === 'contact_groups' && Array.isArray(item.data) && item.data.length > 0) {
+                contactGroups = item.data;
+            }
+            
+            // 桌面文字
+            if (item.id.startsWith('txt_')) {
+                const domId = item.id.replace('txt_', '');
+                const el = document.getElementById(domId);
+                if (el) el.innerText = item.data;
+            }
+        });
+
+        // 5. 渲染界面 (此时 contactGroups 肯定有值了)
+        // 渲染聊天列表
+        if(typeof renderChatList === 'function') renderChatList(); 
+        // 渲染通讯录
+        if(typeof renderContactList === 'function') renderContactList();
+        
+        // 应用壁纸
+        if(beautyConfig && beautyConfig.wallpaper) {
+            document.body.style.backgroundImage = `url('${beautyConfig.wallpaper}')`;
+        }
+        
+        // 6. 恢复所有图片组件
+        const allImages = await dbManager.getAll('images');
+        allImages.forEach(imgData => {
+            const imgEl = document.getElementById(imgData.id);
+            if(imgEl) imgEl.src = imgData.data;
+        });
+        
+        console.log("系统启动完毕 (分组修复版)！当前分组数:", contactGroups.length);
+    } catch (e) {
+        console.error("启动失败:", e);
+    }
 }
+
+
 
 
 // 1. 图片处理逻辑 (修复版：存入 IndexedDB)
@@ -3626,7 +4247,7 @@ editableElements.forEach(el => {
 			// 1. 顶部标题变化 (可选)
 			const titles = {
 				'msg': '聊天',
-				'diary': '日记',
+				'contacts': '通讯录',
 				'moments': '动态',
 				'me': '个人中心'
 			};
@@ -3846,23 +4467,59 @@ function saveSettings() {
 		
 		let tempCharAvatar = ""; // 默认为空
 
-		// 显示新建页面 (同时隐藏底部栏)
-		function showAddCharPage() {
-			document.querySelectorAll('.wc-view-section').forEach(el => el.style.display = 'none');
-			document.getElementById('wc-view-add').style.display = 'flex';
-			document.getElementById('wc-header-title').innerText = "新建人物";
-			document.querySelector('.wc-header .fa-plus').style.display = 'none';
-			// 关键：隐藏底部导航栏！
-			document.querySelector('.wc-bottom-bar').style.display = 'none';
-		}
+				// 显示新建页面 (修改版：加入重置逻辑)
+function showAddCharPage() {
+    document.querySelectorAll('.wc-view-section').forEach(el => el.style.display = 'none');
+    document.getElementById('wc-view-add').style.display = 'flex';
+    
+    // 隐藏微信头部和底部
+    document.querySelector('.wc-header').style.display = 'none'; 
+    document.querySelector('.wc-bottom-bar').style.display = 'none';
 
-		// 取消新建 (恢复底部栏)
-		function cancelAddChar() {
-			// 恢复底部栏
-			document.querySelector('.wc-bottom-bar').style.display = 'flex';
-			// 回到消息页
-			switchWeChatTab('msg', document.querySelector('.wc-bottom-bar .wc-tab'));
-		}
+    // === 关键：如果是点加号进来的，重置为“新建模式” ===
+    editingCharId = null; 
+    document.querySelector('.mg-page-title').innerText = "NEW CHARACTER";
+
+    // 清空输入框
+    document.getElementById('new-char-name').value = "";
+    document.getElementById('new-char-persona').value = "";
+    document.getElementById('new-char-url').value = "";
+    document.getElementById('new-char-img').src = "";
+    document.getElementById('new-char-img').style.display = 'none';
+    document.getElementById('upload-icon').style.display = 'block';
+    tempCharAvatar = "";
+
+    // 加载分组到下拉框
+    const select = document.getElementById('new-char-group-select');
+    select.innerHTML = "";
+    let groupsToLoad = contactGroups;
+    if(!groupsToLoad || groupsToLoad.length === 0) {
+        groupsToLoad = [{id:'g_default', name:'我的好友'}];
+    }
+
+    groupsToLoad.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g.id;
+        opt.innerText = g.name;
+        select.appendChild(opt);
+    });
+}
+
+
+		// 取消新建/编辑
+function cancelAddChar() {
+    // 恢复显示头部和底部
+    document.querySelector('.wc-header').style.display = 'flex';
+    document.querySelector('.wc-bottom-bar').style.display = 'flex';
+    
+    // === 新增：退出时必须清空编辑状态，否则下次点新建会出错 ===
+    editingCharId = null;
+    
+    // 回到消息页
+    switchWeChatTab('msg', document.querySelector('.wc-bottom-bar .wc-tab'));
+}
+
+
 
 		// 处理新建页面的图片上传
 		function handleNewCharImage(event) {
@@ -3895,96 +4552,219 @@ compressImage(e.target.result, 1080, 0.9).then(res => {
 			}
 		}
 
-		// 保存人物
+// === 修改版：保存人物 (支持新建和修改) ===
 function saveNewCharacter() {
-	// 1. 获取输入内容
-	const name = document.getElementById('new-char-name').value;
-	const persona = document.getElementById('new-char-persona').value;
+    // 1. 获取输入内容
+    const name = document.getElementById('new-char-name').value;
+    const persona = document.getElementById('new-char-persona').value; 
+    
+    if (typeof contactGroups === 'undefined') {
+        window.contactGroups = [{id:'g_default', name:'我的好友'}];
+    }
+    
+    const selectEl = document.getElementById('new-char-group-select');
+    const groupId = selectEl ? selectEl.value : 'g_default';
 
-	// 2. 基本检查
-	if (!name) { alert("请至少填写名字！"); return; }
-	if (!tempCharAvatar) { alert("请上传头像！"); return; }
+    // 2. 基本检查
+    if (!name) { alert("请填写名字 / Name Required"); return; }
+    if (!tempCharAvatar) { alert("请上传头像 / Avatar Required"); return; }
 
-	// 3. 构造新角色对象
-	const newChar = {
-		id: Date.now(),
-		name: name,
-		avatar: tempCharAvatar, // 这里是大图片数据
-		persona: persona,
-		lastMsg: "我刚到这里，我们可以聊天了吗？",
-		time: "刚刚"
-	};
+    // 3. 判断：是编辑旧人，还是新建新人？
+    if (editingCharId) {
+        // ---> 编辑模式 <---
+        if (typeof friends === 'undefined') friends = [];
+        const index = friends.findIndex(f => f.id == editingCharId);
+        
+        if (index !== -1) {
+            // 只更新资料，不改ID，这样聊天记录不会丢
+            friends[index].name = name;
+            friends[index].avatar = tempCharAvatar;
+            friends[index].persona = persona;
+            friends[index].groupId = groupId;
+            
+            // 保存并刷新
+            dbManager.saveChatList(friends).then(() => {
+                if(typeof renderChatList === 'function') renderChatList(); 
+                if(typeof renderContactList === 'function') renderContactList(); 
+                // 退出
+                cancelAddChar();
+            });
+        }
+    } else {
+        // ---> 新建模式 (原来的代码) <---
+        const newChar = {
+            id: Date.now(),
+            name: name,
+            avatar: tempCharAvatar,
+            persona: persona,
+            groupId: groupId, 
+            lastMsg: "你好，很高兴认识你。",
+            time: "Just now"
+        };
 
-	// 4. 更新内存中的列表 (全局变量 friends)
-	friends.push(newChar);
+        if (typeof friends === 'undefined') friends = [];
+        friends.push(newChar);
 
-	// 5. 【关键修改】异步保存到 IndexedDB 数据库
-	dbManager.saveChatList(friends).then(() => {
-		alert("人物保存成功！(已存入新数据库)");
-		
-		// 重置输入框
-		document.getElementById('new-char-name').value = "";
-		document.getElementById('new-char-persona').value = "";
-		document.getElementById('new-char-url').value = "";
-		tempCharAvatar = "";
-		document.getElementById('new-char-img').style.display = 'none';
-		document.getElementById('upload-icon').style.display = 'block';
-
-		// 刷新列表并关闭窗口
-		renderChatList();
-		cancelAddChar();
-	}).catch(err => {
-		console.error(err);
-		alert("保存失败，请重试：" + err);
-		// 如果失败，把刚才加进去的删掉，避免显示错误
-		friends.pop();
-		renderChatList();
-	});
+        dbManager.saveChatList(friends).then(() => {
+            if(typeof renderChatList === 'function') renderChatList(); 
+            if(typeof renderContactList === 'function') renderContactList(); 
+            cancelAddChar();
+        });
+    }
 }
 
 
-// 渲染列表 (加引号修复版：解决长按无反应)
+
+
+
+
+// ============ 3. 渲染消息列表 (完美接管顶部导航栏 + 显示最后一条消息版) ============
+
+// 定义一个变量，记录当前选中的是哪个分组，默认是 'all' (全部)
+var currentChatFilter = 'all';
+
 function renderChatList() {
-	const list = friends || []; 
-	const container = document.getElementById('chat-list');
-	container.innerHTML = ""; 
+    const list = friends || []; 
+    const listContainer = document.getElementById('chat-list');
+    if (!listContainer) return;
+    
+    // 1. 获取顶部的导航栏容器
+    const navContainer = document.querySelector('.wc-sub-nav');
+    
+    if (navContainer) {
+        // --- A. 改造顶部导航栏 ---
+        navContainer.style.display = "flex";
+        navContainer.style.overflowX = "auto";
+        navContainer.style.whiteSpace = "nowrap";
+        navContainer.style.justifyContent = "flex-start";
+        navContainer.style.gap = "10px";
+        navContainer.style.padding = "0 10px 10px 10px";
+        navContainer.style.scrollbarWidth = "none"; 
+        
+        const groups = (typeof contactGroups !== 'undefined' && contactGroups) ? contactGroups : [{id:'g_default', name:'我的好友'}];
+        const allTabs = [{id:'all', name:'全部'}, ...groups];
+        
+        let navHtml = allTabs.map(g => {
+            const isActive = (currentChatFilter === g.id);
+            const bg = isActive ? '#000' : 'transparent'; 
+            const color = isActive ? '#fff' : '#999';
+            const weight = isActive ? 'bold' : 'normal';
+            const shadow = isActive ? '0 4px 10px rgba(0,0,0,0.2)' : 'none';
+            
+            return `
+                <div onclick="switchChatFilter('${g.id}')" 
+                     style="
+                        padding: 8px 18px;      /* 1. 改回8px，保证文字在黑块里是居中的 */
+margin-top: 12px;       /* 2. 新增这行：让整个黑块往下挪12像素 */
+                        border-radius: 20px; 
+                        font-size: 14px; 
+                        font-weight: ${weight}; 
+                        color: ${color}; 
+                        background: ${bg}; 
+                        cursor: pointer; 
+                        flex-shrink: 0; 
+                        transition: all 0.2s;
+                        box-shadow: ${shadow};
+                        user-select: none;
+                     ">
+                    ${g.name}
+                </div>
+            `;
+        }).join('');
+        
+        navContainer.innerHTML = navHtml;
+    }
 
-	if(list.length === 0) {
-		container.innerHTML = '<div style="text-align:center; color:#ccc; margin-top:50px; font-size:12px;">点击右上角 + 号新建人物</div>';
-		return;
-	}
+    // --- B. 渲染下面的聊天列表 ---
+    listContainer.innerHTML = ""; 
+    
+    // 筛选逻辑
+    let displayList = list.slice().reverse(); 
+    if (currentChatFilter !== 'all') {
+        displayList = displayList.filter(f => f.groupId === currentChatFilter);
+    }
 
-	// 倒序显示，新的排前面
-	list.slice().reverse().forEach(char => {
-		// 注意：下面onclick和onmousedown里的ID都加了单引号
-		const html = `
-			<div class="wc-item" 
-				 onclick="onListClick('${char.id}')"
-				 oncontextmenu="return false;" 
-				 onmousedown="handleListLongPress(event, '${char.id}')" 
-				 ontouchstart="handleListLongPress(event, '${char.id}')" 
-				 ontouchend="cancelListLongPress()"
-				 ontouchmove="cancelListLongPress()" 
-				 onmouseup="cancelListLongPress()"
-			>
-				<img src="${char.avatar}" class="wc-avatar">
-				<div class="wc-content">
-					<span class="wc-name">${char.name}</span>
-					<span class="wc-msg">${char.persona ? char.persona.substring(0, 15) + '...' : char.lastMsg}</span>
-				</div>
-				<div class="wc-meta">
-					<span>${char.time}</span>
-				</div>
-			</div>
-		`;
-		container.innerHTML += html;
-	});
+    if(displayList.length === 0) {
+        const emptyText = currentChatFilter === 'all' ? '点击右上角 + 号新建人物' : '该分组下暂无好友';
+        listContainer.innerHTML = `<div style="text-align:center; color:#ccc; margin-top:50px; font-size:12px;">${emptyText}</div>`;
+        return;
+    }
+
+    displayList.forEach(char => {
+        // === 核心修改：获取最后一条消息 ===
+        let lastMsgText = "暂无消息";
+        let lastMsgTime = char.time || "Just now";
+        
+        // 从全局聊天记录缓存里找
+        if (window.g_chatHistory && window.g_chatHistory[char.id]) {
+            const msgs = window.g_chatHistory[char.id];
+            if (msgs.length > 0) {
+                const lastMsg = msgs[msgs.length - 1];
+                
+                // 处理特殊消息类型
+                if (lastMsg.type === 'image') lastMsgText = '[图片]';
+                else if (lastMsg.type === 'sticker') lastMsgText = '[表情]';
+                else if (lastMsg.type === 'redpacket') lastMsgText = '[红包]';
+                else if (lastMsg.type === 'transfer') lastMsgText = '[转账]';
+                else if (lastMsg.type === 'voice_text') lastMsgText = '[语音]';
+                else lastMsgText = lastMsg.text || "";
+                
+                // 处理时间 (如果有时间戳的话)
+                if(lastMsg.timestamp) {
+                    const date = new Date(lastMsg.timestamp);
+                    const hours = date.getHours().toString().padStart(2, '0');
+                    const mins = date.getMinutes().toString().padStart(2, '0');
+                    lastMsgTime = `${hours}:${mins}`;
+                }
+            } else {
+                // 如果没有聊天记录，显示一句默认的话
+                lastMsgText = "你好，很高兴认识你。";
+            }
+        } else {
+             // 兜底：如果没有缓存
+             lastMsgText = "你好，很高兴认识你。";
+        }
+
+        // 截断太长的消息
+        if(lastMsgText.length > 18) lastMsgText = lastMsgText.substring(0, 18) + "...";
+
+        const html = `
+            <div class="wc-item" 
+                 onclick="onListClick('${char.id}')"
+                 oncontextmenu="return false;" 
+                 onmousedown="handleListLongPress(event, '${char.id}')" 
+                 ontouchstart="handleListLongPress(event, '${char.id}')" 
+                 ontouchend="cancelListLongPress()"
+                 ontouchmove="cancelListLongPress()" 
+                 onmouseup="cancelListLongPress()"
+            >
+                <img src="${char.avatar}" class="wc-avatar">
+                <div class="wc-content">
+                    <span class="wc-name">${char.name}</span>
+                    <!-- 这里使用的是刚刚计算出来的 lastMsgText -->
+                    <span class="wc-msg" style="color:#888;">${lastMsgText}</span>
+                </div>
+                <div class="wc-meta">
+                    <span>${lastMsgTime}</span>
+                </div>
+            </div>
+        `;
+        listContainer.innerHTML += html;
+    });
+}
+
+// 切换筛选状态的辅助函数
+function switchChatFilter(groupId) {
+    currentChatFilter = groupId;
+    renderChatList(); 
 }
 
 
 
 		/* ========== 新增：聊天页面逻辑 ========== */
 		let currentChatId = null; // 当前正在聊谁
+		let editingCharId = null; // 新增：用于记录当前正在编辑谁
+
 		
 
 
@@ -4567,15 +5347,31 @@ async function triggerAIReply() {
 			`;
 		}
 
+				// === [升级版] 读取记忆列表 ===
+let memoryContent = "";
+if (char.memory_list && char.memory_list.length > 0) {
+    // 把所有卡片的内容拼起来
+    memoryContent = char.memory_list.map(m => `[${m.date}] ${m.content}`).join("\n");
+} else if (char.memory_summary) {
+    // 兼容旧数据
+    memoryContent = char.memory_summary;
+}
+
+const memoryText = memoryContent 
+    ? `\n[长期记忆档案 (Long-term Memory)]\n${memoryContent}\n(注：以上是你们的过往记忆，请严格参考这些事实进行回复，不要前后矛盾)\n` 
+    : "";
+
+
 		// --- 整合 System Prompt (保留你的原始规则，只在末尾追加新规则) ---
 		const systemPrompt = `
 【最高指令：沉浸式真实线上聊天】
 你的身份：${char.name}
 你的设定：${char.persona}
 对话对象：${userPersona}
-
+${memoryText}
 [世界观]
 ${wbText || '无'}
+
 
 [必须严格遵守的聊天规则]
 1. **拒绝复读与总结**：
@@ -5343,6 +6139,38 @@ ${videoPatch}
 		// ================= 【核心修改：保存到新数据库】 =================
 		window.g_chatHistory[currentChatId] = messages; // 更新内存
 		dbManager.saveHistory(currentChatId, messages); // 保存到IndexedDB
+		            // ==========================================
+            // === [新增] 第6步：自动记忆总结逻辑 (粘贴在这里) ===
+            // ==========================================
+            
+            // 只有当开关打开，且 memoryConfig 存在时才执行
+            if (typeof memoryConfig !== 'undefined' && memoryConfig.autoSync) {
+                // 1. 增加计数
+                if (!char.unsaved_round_count) char.unsaved_round_count = 0;
+                char.unsaved_round_count += 1; // 聊一次算一轮
+                
+                console.log(`[记忆系统] 当前积累: ${char.unsaved_round_count} / 阈值: ${memoryConfig.threshold}`);
+
+                // 2. 检查是否达到设定的轮数
+                if (char.unsaved_round_count >= memoryConfig.threshold) {
+                    console.log(`[记忆系统] 达到阈值，开始后台总结...`);
+                    
+                    // 后台静默执行，不打断你聊天
+                    // 注意：这里调用的是第4步里写的 runSummaryProcess 函数
+                    if (typeof runSummaryProcess === 'function') {
+                        runSummaryProcess(char, memoryConfig.threshold).then(() => {
+                            console.log(`[记忆系统] ${char.name} 的记忆已自动更新。`);
+                        }).catch(err => {
+                            console.error("[记忆系统] 自动更新失败", err);
+                        });
+                    }
+                } else {
+                    // 还没到轮数，只保存计数器状态
+                    if (dbManager) dbManager.saveChatList(friends);
+                }
+            }
+            // ==========================================
+
 
 
 		} catch (error) {
@@ -7923,6 +8751,676 @@ async function playVideoTTS(text, vConfig, settings) {
 		window.isSpeaking = false;
 	}
 }
+
+// ============ 2. 渲染通讯录列表 (修改版：支持未分组+删除分组) ============
+var isUngroupedOpen = false; // 记录未分组列表是否打开
+
+function renderContactList() {
+    const container = document.getElementById('contact-list-container');
+    if (!container) return;
+    container.innerHTML = "";
+
+    const allFriends = friends || [];
+
+    // --- 1. 渲染用户自定义的分组 ---
+    contactGroups.forEach((group) => {
+        // 筛选属于这个分组的好友
+        const groupMembers = allFriends.filter(f => f.groupId === group.id);
+
+        const arrowClass = group.isOpen ? 'open' : '';
+        const bodyClass = group.isOpen ? 'show' : '';
+        const count = groupMembers.length;
+
+        // 判断是否是默认分组 (默认分组 g_default 不显示删除按钮)
+        const isDefault = (group.id === 'g_default');
+        
+        // 删除按钮 HTML (点击时阻止冒泡，防止触发折叠)
+        const deleteBtnHtml = isDefault ? '' : 
+            `<i class="far fa-trash-alt" 
+                onclick="event.stopPropagation(); deleteContactGroup('${group.id}', '${group.name}')" 
+                style="color:#ccc; font-size:14px; padding:8px; margin-right:5px; cursor:pointer;"
+                onmouseover="this.style.color='#ff4d4f'" 
+                onmouseout="this.style.color='#ccc'">
+             </i>`;
+
+        const groupHtml = document.createElement('div');
+        groupHtml.className = 'contact-card-group';
+        
+        groupHtml.innerHTML = `
+            <div class="contact-card-header" onclick="toggleContactGroup('${group.id}')">
+                <div style="display:flex; align-items:center; gap:10px; flex:1;">
+                    <span>${group.name}</span>
+                    <span style="font-size:12px; color:#aaa; font-weight:normal;">${count}</span>
+                </div>
+                
+                <div style="display:flex; align-items:center;">
+                    ${deleteBtnHtml}
+                    <i class="fas fa-chevron-right contact-card-arrow ${arrowClass}"></i>
+                </div>
+            </div>
+            
+            <div class="contact-card-body ${bodyClass}">
+                ${groupMembers.length === 0 ? 
+                    '<div style="text-align:center; padding:15px 0; font-size:12px; color:#ccc;">暂无联系人</div>' : 
+                    groupMembers.map(f => `
+                        <div class="contact-user-item" onclick="openContactDetail('${f.id}')">
+                            <img src="${f.avatar}" class="contact-user-avatar">
+                            <div class="contact-user-info">
+                                <span class="contact-user-name">${f.name}</span>
+                                <span class="contact-user-desc">${f.persona ? f.persona.substring(0, 15) : '暂无签名'}</span>
+                            </div>
+                        </div>
+                    `).join('')
+                }
+            </div>
+        `;
+        container.appendChild(groupHtml);
+    });
+
+    // --- 2. 渲染“未分组”列表 (新增功能) ---
+    // 逻辑：找出所有 groupId 为空，或者 groupId 指向了一个不存在的分组的人
+    const validGroupIds = contactGroups.map(g => g.id);
+    const ungroupedMembers = allFriends.filter(f => !f.groupId || !validGroupIds.includes(f.groupId));
+
+    // 只有当有未分组好友时才显示 (或者你可以删掉 if 让它一直显示)
+    const ugArrowClass = isUngroupedOpen ? 'open' : '';
+    const ugBodyClass = isUngroupedOpen ? 'show' : '';
+    
+    const ungroupedHtml = document.createElement('div');
+    ungroupedHtml.className = 'contact-card-group';
+    ungroupedHtml.style.marginTop = "15px"; // 和上面分开一点
+    
+    ungroupedHtml.innerHTML = `
+        <div class="contact-card-header" onclick="toggleUngroupedList()">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="color:#555;">未分组</span>
+                <span style="font-size:12px; color:#aaa; font-weight:normal;">${ungroupedMembers.length}</span>
+            </div>
+            <i class="fas fa-chevron-right contact-card-arrow ${ugArrowClass}"></i>
+        </div>
+        
+        <div class="contact-card-body ${ugBodyClass}">
+            ${ungroupedMembers.length === 0 ? 
+                '<div style="text-align:center; padding:15px 0; font-size:12px; color:#ccc;">没有未分组的好友</div>' : 
+                ungroupedMembers.map(f => `
+                    <div class="contact-user-item" onclick="openContactDetail('${f.id}')">
+                        <img src="${f.avatar}" class="contact-user-avatar" style="filter:grayscale(10%);">
+                        <div class="contact-user-info">
+                            <span class="contact-user-name" style="color:#666;">${f.name}</span>
+                            <span class="contact-user-desc">${f.persona ? f.persona.substring(0, 15) : '暂无签名'}</span>
+                        </div>
+                    </div>
+                `).join('')
+            }
+        </div>
+    `;
+    container.appendChild(ungroupedHtml);
+}
+
+// ============ 新增：删除分组逻辑 (不删人，只删组) ============
+function deleteContactGroup(groupId, groupName) {
+    if(groupId === 'g_default') {
+        alert("默认分组不能删除哦");
+        return;
+    }
+
+    // 弹出确认框
+    if(!confirm(`确定要删除分组【${groupName}】吗？\n\n该分组内的人物会自动移动到“未分组”列表。`)) {
+        return;
+    }
+
+    // 1. 从内存中删除该分组
+    contactGroups = contactGroups.filter(g => g.id !== groupId);
+
+    // 2. 把该分组里的人物的 groupId 清空 (这样他们就会进未分组)
+    let hasUpdates = false;
+    friends.forEach(f => {
+        if(f.groupId === groupId) {
+            f.groupId = ""; // 清空 ID
+            hasUpdates = true;
+        }
+    });
+
+    // 3. 保存到数据库
+    if(typeof dbManager !== 'undefined') {
+        // 保存分组设置
+        dbManager.set('settings', { id: 'contact_groups', data: contactGroups });
+        
+        // 如果人物数据变了，也要保存人物列表
+        if(hasUpdates) {
+            dbManager.saveChatList(friends);
+        }
+    }
+
+    // 4. 刷新页面
+    renderContactList();
+}
+
+// 辅助函数：切换“未分组”列表的开合
+function toggleUngroupedList() {
+    isUngroupedOpen = !isUngroupedOpen;
+    renderContactList();
+}
+
+
+
+// 3. 折叠/展开分组 (修复版)
+function toggleContactGroup(gid) {
+	const group = contactGroups.find(g => g.id === gid);
+	if(group) {
+		// 切换开/关状态
+		group.isOpen = !group.isOpen;
+		
+		// 直接保存到数据库，不依赖外部函数
+		if(typeof dbManager !== 'undefined') {
+			dbManager.set('settings', { id: 'contact_groups', data: contactGroups });
+		}
+		
+		// 刷新列表
+		renderContactList(); 
+	}
+}
+
+
+// 4. 新建分组 (修复版 - 圆角卡片风)
+function createNewGroup() {
+    // 确保 contactGroups 全局变量存在
+    if (typeof contactGroups === 'undefined' || !contactGroups) {
+        contactGroups = [{id:'g_default', name:'我的好友'}];
+    }
+    
+    // 清空输入框并显示新弹窗
+    const input = document.getElementById('new-group-input');
+    if(input) input.value = "";
+    
+    const modal = document.getElementById('create-group-modal');
+    if(modal) {
+        modal.style.display = 'flex';
+        // 自动聚焦输入框
+        setTimeout(() => input && input.focus(), 100);
+    } else {
+        // 如果 HTML 没粘贴对，这里会提示
+        console.error("找不到 create-group-modal 弹窗元素");
+    }
+}
+
+// 关闭新建弹窗
+function closeCreateGroupModal() {
+    const modal = document.getElementById('create-group-modal');
+    if(modal) modal.style.display = 'none';
+}
+
+// 确认创建 (核心保存逻辑)
+function confirmCreateGroup() {
+    const input = document.getElementById('new-group-input');
+    const name = input ? input.value.trim() : "";
+    
+    if(name) {
+        const newId = 'g_' + Date.now();
+        
+        // 1. 推入数据到内存
+        contactGroups.push({ id: newId, name: name, isOpen: true });
+        
+        // 2. 保存到 IndexedDB 数据库
+        dbManager.set('settings', { id: 'contact_groups', data: contactGroups }).then(() => {
+            // 3. 刷新界面
+            if(typeof renderContactList === 'function') renderContactList(); 
+            
+            // 4. 关闭弹窗
+            closeCreateGroupModal();
+        });
+        
+    } else {
+        alert("分组名字不能为空哦~");
+    }
+}
+
+
+// ============ 人物详情页逻辑 ============
+
+let currentDetailCharId = null;
+
+// 1. 打开详情页 (杂志风固定弹窗版)
+function openContactDetail(charId) {
+	// 查找人物
+	const char = friends.find(f => f.id == charId);
+	if(!char) return;
+
+	currentDetailCharId = charId;
+
+	// 填充基本信息
+	document.getElementById('cd-avatar').src = char.avatar;
+	document.getElementById('cd-name').innerText = char.name;
+	
+	// 填充长文本 (如果是空，显示默认提示)
+	const personaText = char.persona || "暂无详细设定 / No detailed persona description.";
+	document.getElementById('cd-persona').innerText = personaText;
+
+	// 生成分组下拉框
+	const select = document.getElementById('cd-group-select');
+	select.innerHTML = "";
+	
+	// 确保分组数据存在
+	if (typeof contactGroups === 'undefined' || !contactGroups) {
+		contactGroups = [{id:'g_default', name:'我的好友'}];
+	}
+
+	contactGroups.forEach(g => {
+		const opt = document.createElement('option');
+		opt.value = g.id;
+		opt.innerText = g.name;
+		select.appendChild(opt);
+	});
+	// 选中当前分组 (如果没有，选默认)
+	select.value = char.groupId || 'g_default';
+
+	// 显示弹窗
+	const modal = document.getElementById('contact-detail-modal');
+	if(modal) {
+		modal.style.display = 'flex';
+		
+		// 【关键】让滚动条滚回最上面
+		const scrollBox = modal.querySelector('.mg-fixed-card > div:nth-child(2)');
+		if(scrollBox) scrollBox.scrollTop = 0;
+	}
+}
+
+	
+
+
+// 2. 关闭详情页
+function closeContactDetail() {
+	document.getElementById('contact-detail-modal').style.display = 'none';
+}
+
+// 3. 修改人物分组
+function saveContactGroupChange() {
+	const newGid = document.getElementById('cd-group-select').value;
+	if(!currentDetailCharId || !newGid) return;
+
+	const idx = friends.findIndex(f => f.id == currentDetailCharId);
+	if(idx !== -1) {
+		friends[idx].groupId = newGid;
+		dbManager.saveChatList(friends); // 保存到数据库
+		renderContactList(); // 刷新通讯录列表
+	}
+}
+
+// 4. 跳转发消息
+function jumpToChatFromContact() {
+	if(!currentDetailCharId) return;
+	closeContactDetail();
+	toggleWeChat(); // 确保微信是开的
+	// 切换到底部“消息”Tab
+	const msgTabBtn = document.querySelectorAll('.wc-tab')[0];
+	switchWeChatTab('msg', msgTabBtn);
+	// 打开聊天窗口
+	openChatPage(currentDetailCharId);
+}
+
+// === 新增：从详情页跳转去编辑 ===
+function editContactFromDetail() {
+    if(!currentDetailCharId) return;
+    
+    // 1. 找到这个角色
+    const list = friends || [];
+    const char = list.find(c => c.id == currentDetailCharId);
+    if(!char) return;
+
+    // 2. 关闭卡片，打开编辑页
+    closeContactDetail();
+    showAddCharPage();
+
+    // 3. 标记为“正在编辑模式”
+    editingCharId = char.id; 
+    
+    // 4. 改一下标题，让用户知道是在编辑
+    document.querySelector('.mg-page-title').innerText = "EDIT CHARACTER"; 
+
+    // 5. 把旧数据填回去
+    document.getElementById('new-char-name').value = char.name;
+    document.getElementById('new-char-persona').value = char.persona || "";
+    
+    // 填分组
+    const select = document.getElementById('new-char-group-select');
+    if(select) select.value = char.groupId || 'g_default';
+
+    // 填头像 (重要)
+    const img = document.getElementById('new-char-img');
+    const icon = document.getElementById('upload-icon');
+    
+    if (char.avatar) {
+        img.src = char.avatar;
+        img.style.display = 'block';
+        icon.style.display = 'none';
+        tempCharAvatar = char.avatar; // 把旧头像存进临时变量
+    }
+}
+
+
+
+// ============ 记忆档案 (Memory Archive) 最终完整版逻辑 ============
+
+// 1. 定义记忆功能的默认配置
+let memoryConfig = {
+    autoSync: false, 
+    threshold: 25    
+};
+
+// 2. 打开/关闭 记忆档案APP
+function toggleMemoryApp() {
+    const app = document.getElementById('memory-app');
+    if (app.style.display === 'none' || app.style.display === '') {
+        app.style.display = 'flex';
+        initMemoryApp(); 
+    } else {
+        app.style.display = 'none'; 
+    }
+}
+
+// 3. 初始化
+async function initMemoryApp() {
+    if (dbManager) {
+        const res = await dbManager.get('settings', 'memory_config');
+        if (res && res.data) {
+            memoryConfig = res.data;
+        }
+    }
+    const switchEl = document.getElementById('mem-global-switch');
+    if(switchEl) switchEl.checked = memoryConfig.autoSync;
+    const inputEl = document.getElementById('mem-round-input');
+    if(inputEl) inputEl.value = memoryConfig.threshold;
+    renderMemoryList();
+}
+
+// 4. 保存配置
+function saveMemoryConfig() {
+    const switchEl = document.getElementById('mem-global-switch');
+    const inputEl = document.getElementById('mem-round-input');
+    if(switchEl) memoryConfig.autoSync = switchEl.checked;
+    if(inputEl) memoryConfig.threshold = parseInt(inputEl.value) || 25;
+    if (dbManager) {
+        dbManager.set('settings', { id: 'memory_config', data: memoryConfig });
+    }
+}
+
+// 5. 渲染人物列表
+function renderMemoryList() {
+    const container = document.getElementById('mem-char-list');
+    if(!container) return;
+    container.innerHTML = "";
+    const list = friends || [];
+    if(list.length === 0) {
+        container.innerHTML = "<div style='text-align:center; color:#999; margin-top:20px;'>暂无人物</div>";
+        return;
+    }
+    list.forEach(char => {
+        let preview = "NO DATA / 暂无记忆档案";
+        if (char.memory_list && char.memory_list.length > 0) {
+            preview = char.memory_list[char.memory_list.length - 1].content;
+        } else if (char.memory_summary) {
+            preview = char.memory_summary;
+        }
+        const div = document.createElement('div');
+        div.className = 'mem-card';
+        div.onclick = () => openMemDetail(char.id);
+        div.innerHTML = `
+            <img src="${char.avatar}" class="mem-card-avatar">
+            <div class="mem-card-info">
+                <div class="mem-card-name">${char.name}</div>
+                <div class="mem-card-preview">${preview}</div>
+            </div>
+            <i class="fas fa-chevron-right" style="font-size:12px; color:#ccc;"></i>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// 6. 打开详情页
+let curMemCharId = null;
+function openMemDetail(charId) {
+    curMemCharId = charId;
+    const char = friends.find(c => c.id == charId);
+    if (!char) return;
+    document.getElementById('mem-detail-name').innerText = char.name.toUpperCase();
+    
+    // 兼容旧数据
+    if (char.memory_summary && (!char.memory_list || char.memory_list.length === 0)) {
+        char.memory_list = [{
+            id: Date.now(),
+            date: new Date().toLocaleString(),
+            content: char.memory_summary,
+            type: 'auto'
+        }];
+        char.memory_summary = ""; 
+    }
+    renderMemoryCards(char);
+    document.getElementById('mem-detail-modal').style.display = 'flex';
+}
+
+function closeMemDetail() {
+    document.getElementById('mem-detail-modal').style.display = 'none';
+}
+
+// 7. 渲染卡片流
+function renderMemoryCards(char) {
+    const container = document.getElementById('mem-card-container');
+    container.innerHTML = "";
+    const list = char.memory_list || [];
+    if (list.length === 0) {
+        container.innerHTML = "<div style='text-align:center; color:#ccc; font-size:12px; margin-top:50px;'>暂无记忆档案<br>点击下方 + 号添加</div>";
+        return;
+    }
+    list.slice().reverse().forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'mem-record-card';
+        div.onclick = () => editMemoryCard(item.id);
+        div.innerHTML = `
+            <div class="mem-card-date">
+                <span>${item.date}</span>
+                <i class="fas fa-pen" style="font-size:10px; color:#ddd;"></i>
+            </div>
+            <div class="mem-card-content">${item.content}</div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// ============ [核心新增] 杂志风弹窗逻辑 ============
+
+let dialogMode = 'add'; 
+let targetMemId = null; 
+
+// 打开弹窗
+function openMemDialog(mode, id = null, content = "") {
+    dialogMode = mode;
+    targetMemId = id;
+    const titleEl = document.getElementById('mem-dialog-title');
+    const inputEl = document.getElementById('mem-dialog-input');
+    const delBtn = document.getElementById('mem-btn-delete');
+    
+    if (mode === 'add') {
+        titleEl.innerText = "NEW MEMORY / 新建记忆";
+        inputEl.value = "";
+        inputEl.placeholder = "例如：昨天一起去看了电影...";
+        delBtn.style.display = 'none'; 
+    } else {
+        titleEl.innerText = "EDIT ARCHIVE / 编辑档案";
+        inputEl.value = content;
+        delBtn.style.display = 'block'; 
+    }
+    document.getElementById('mem-custom-dialog').style.display = 'flex';
+    setTimeout(() => inputEl.focus(), 100);
+}
+
+// 关闭弹窗
+function closeMemDialog() {
+    document.getElementById('mem-custom-dialog').style.display = 'none';
+}
+
+// 保存
+function saveMemDialog() {
+    const text = document.getElementById('mem-dialog-input').value.trim();
+    if (!text) { alert("内容不能为空"); return; }
+
+    const char = friends.find(c => c.id == curMemCharId);
+    if (!char) return;
+    if (!char.memory_list) char.memory_list = [];
+
+    if (dialogMode === 'add') {
+        const now = new Date();
+        const dateStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+        char.memory_list.push({
+            id: Date.now(),
+            date: dateStr,
+            content: text,
+            type: 'manual'
+        });
+    } else {
+        const item = char.memory_list.find(m => m.id == targetMemId);
+        if (item) item.content = text;
+    }
+    dbManager.saveChatList(friends);
+    renderMemoryCards(char);
+    renderMemoryList();
+    closeMemDialog();
+}
+
+// 删除
+function deleteMemFromDialog() {
+    if (!confirm("Confirm Delete? / 确定要销毁这条档案吗？")) return;
+    const char = friends.find(c => c.id == curMemCharId);
+    if (char && char.memory_list) {
+        char.memory_list = char.memory_list.filter(m => m.id !== targetMemId);
+        dbManager.saveChatList(friends);
+        renderMemoryCards(char);
+        renderMemoryList();
+        closeMemDialog();
+    }
+}
+
+// 入口函数
+function addNewMemoryCard() { openMemDialog('add'); }
+function editMemoryCard(memId) {
+    const char = friends.find(c => c.id == curMemCharId);
+    if (!char || !char.memory_list) return;
+    const item = char.memory_list.find(m => m.id == memId);
+    if (item) openMemDialog('edit', memId, item.content);
+}
+
+// ============ AI 总结逻辑 ============
+async function performManualSummary() {
+    if (!curMemCharId) return;
+    const char = friends.find(c => c.id == curMemCharId);
+    const countInput = document.getElementById('mem-manual-count');
+    const count = parseInt(countInput.value) || 50;
+    
+    const btn = document.querySelector('.mem-btn-small');
+    const originalText = btn.innerText;
+    btn.innerText = "PROCESSING...";
+    btn.disabled = true;
+
+    try {
+        await runSummaryProcess(char, count);
+        alert("记忆档案已更新 / Memory Updated");
+        renderMemoryCards(char);
+        renderMemoryList(); 
+    } catch (e) {
+        console.error(e);
+        alert("总结失败: " + e.message);
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}
+
+async function runSummaryProcess(char, roundCount) {
+    let messages = window.g_chatHistory[char.id] || [];
+    if (messages.length < 5) throw new Error("聊天记录太少");
+
+    const recentMsgs = messages.slice(-(roundCount * 2)).map(m => {
+        const roleName = m.sender === 'me' ? '用户' : char.name;
+        let cleanText = m.text || "";
+        if(m.type === 'sticker') cleanText = "[表情包]";
+        if(m.type === 'redpacket') cleanText = "[红包]";
+        return `${roleName}: ${cleanText}`;
+    }).join("\n");
+
+    const systemInstruction = `
+    你是一个档案记录员。请将以下对话总结为一段**简练的、第三人称**的记忆摘要。
+    只保留核心事件（如：日期、发生了什么、关系变化）。
+    不要写废话，不要超过 100 字。
+    `;
+
+    const config = globalSettings;
+    if (!config || !config.key) throw new Error("请先设置 API Key");
+
+    let fetchUrl = config.url.endsWith('/') ? config.url : config.url + '/';
+    if (!fetchUrl.includes('/v1')) fetchUrl += 'v1/';
+    fetchUrl += 'chat/completions';
+
+    const res = await fetch(fetchUrl, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${config.key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: config.model,
+            messages: [
+                { role: "system", content: systemInstruction },
+                { role: "user", content: `最近对话：\n${recentMsgs}` }
+            ],
+            temperature: 0.3
+        })
+    });
+    
+    const data = await res.json();
+    const newSummary = data.choices[0].message.content;
+
+    if (!char.memory_list) char.memory_list = [];
+    const now = new Date();
+    const dateStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+    char.memory_list.push({
+        id: Date.now(),
+        date: dateStr + " (AI总结)",
+        content: newSummary,
+        type: 'auto'
+    });
+
+    char.unsaved_round_count = 0; 
+    await dbManager.saveChatList(friends);
+}
+
+
+
+// ============ 启动挂载 (最终版) ============
+window.addEventListener('load', () => {
+    // 1. 初始化数据库和聊天
+    if(typeof initApp === 'function') initApp();
+    
+    // 2. 延迟加载通讯录 (给数据库一点时间)
+    setTimeout(() => {
+        // 尝试从数据库加载分组
+        if(typeof dbManager !== 'undefined') {
+            dbManager.get('settings', 'contact_groups').then(res => {
+                if (res && res.data) {
+                    contactGroups = res.data;
+                } else {
+                    // 如果是第一次用，给个默认分组
+                    contactGroups = [
+                        { id: 'g_default', name: '我的好友', isOpen: true },
+                        { id: 'g_care', name: '特别关心', isOpen: true }
+                    ];
+                }
+                // 渲染列表
+                if(typeof renderContactList === 'function') renderContactList();
+            }).catch(() => {
+                // 如果报错，也给个默认值保底
+                 contactGroups = [{ id: 'g_default', name: '我的好友', isOpen: true }];
+                 if(typeof renderContactList === 'function') renderContactList();
+            });
+        }
+    }, 500);
+});
 
 
 	</script>
