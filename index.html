@@ -1919,9 +1919,12 @@
 		.vc-status { font-size: 14px; color: #666; letter-spacing: 1px; }
 
 		/* 2. 通话中界面 (全屏视频) */
-		.vc-active-ui {
-			flex: 1; display: none; position: relative; background: #000;
-		}
+.vc-active-ui {
+    flex: 1; display: none; position: relative;
+    background: #000;
+    overflow: hidden; 
+}
+
 		
 		  /* ============ 视频通话新布局 CSS ============ */
 	
@@ -2121,59 +2124,83 @@
 			border: none;
 		}
 
-/* ============ 新增：视频通话 AI 正在输入动画 ============ */
-/* 加载气泡样式 */
-.vc-loading-bubble {
-	/* 半透明黑色背景，圆角 */
-	background: rgba(0,0,0,0.6);
-	padding: 15px 20px;
-	border-radius: 16px;
-	
-	/* 靠左显示，像对方的消息一样 */
-	align-self: flex-start;
-	
-	/* 让里面的三个点横向排列 */
-	display: flex;
-	gap: 6px;
-	align-items: center;
-	
-	/* 宽度随内容撑开 */
-	width: fit-content;
-	
-	/* 磨砂玻璃效果 */
-	backdrop-filter: blur(5px);
-	
-	/* 出现时的上滑动画 */
-	animation: slideUp 0.3s;
-	margin-bottom: 5px;
+
+/* ============ 🌟 最终修正版：沉浸式呼吸 (最稳最帅) ============ */
+
+/* 1. 纯净呼吸动画：只做放大和上浮，不做扭曲，保证脸不崩 */
+@keyframes otome-breathe-final {
+    0% { 
+        transform: scale(1.0) translateY(0); 
+    }
+    50% { 
+        /* 放大 3%，向上浮动 5px */
+        /* 这种节奏就像真人在呼吸一样 */
+        transform: scale(1.03) translateY(-5px); 
+    }
+    100% { 
+        transform: scale(1.0) translateY(0); 
+    }
 }
 
-/* 三个跳动的小白点 */
-.vc-dot {
-	width: 6px; 
-	height: 6px; 
-	background: rgba(255,255,255,0.9); 
-	border-radius: 50%;
-	
-	/* 无限循环的跳动动画 */
-	animation: vc-bounce 1.4s infinite ease-in-out both;
+/* 2. 梦幻光斑：增加空气流动感 */
+@keyframes otome-float-gentle {
+    0% { background-position: 0% 0%; opacity: 0.4; }
+    50% { opacity: 0.7; } /* 忽明忽暗，像光影在变 */
+    100% { background-position: 50% 100%; opacity: 0.4; }
 }
 
-/* 给三个点加上延迟，形成波浪效果 */
-.vc-dot:nth-child(1) { animation-delay: -0.32s; }
-.vc-dot:nth-child(2) { animation-delay: -0.16s; }
-
-/* 跳动动画的具体关键帧 */
-@keyframes vc-bounce {
-	0%, 80%, 100% { 
-		transform: scale(0); /* 变小消失 */
-		opacity: 0.5; 
-	}
-	40% { 
-		transform: scale(1); /* 变大出现 */
-		opacity: 1; 
-	}
+/* 3. 应用到头像 */
+.vc-breathing-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    
+    /* 变换原点：中心偏下，让头部的动感比身体明显 */
+    transform-origin: 50% 70%; 
+    
+    /* 5秒一次呼吸，节奏最舒服 */
+    animation: otome-breathe-final 5s ease-in-out infinite;
+    
+    will-change: transform; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    
+    /* 稍微放大一点点，消除边缘黑边 */
+    width: 102%;
+    height: 102%;
+    left: -1%;
+    top: -1%;
 }
+
+/* 4. 氛围层 (光点) */
+.vc-atmosphere-layer {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1; pointer-events: none;
+    /* 细腻的光斑 */
+    background-image: 
+        radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 60px 120px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 150px 200px, #ffffff, rgba(0,0,0,0));
+    background-size: 200px 300px;
+    animation: otome-float-gentle 15s linear infinite;
+    mix-blend-mode: screen;
+}
+
+/* 5. 电影感暗角 (加强一点点，突出人脸) */
+.vc-vignette {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2;
+    /* 上面浅一点，下面深一点 */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0) 30%, rgba(0,0,0,0.6));
+    pointer-events: none;
+}
+
+
+
+
 	</style>
 </head>
 <body>
@@ -3244,10 +3271,15 @@
 		</div>
 
 			  <!-- 阶段 2: 通话中 (新版布局：AI全屏 + 我在右上角 + 输入框) -->
-		<div id="vc-active-layer" class="vc-active-ui">
+				<div id="vc-active-layer" class="vc-active-ui" style="overflow: hidden;">
 			
-			<!-- 1. 对方头像 (放在最前面，变成全屏背景) -->
-			<img id="vc-remote-avatar" src="">
+			<!-- 1. 对方头像 (核心修改：加了 class="vc-breathing-avatar") -->
+			<img id="vc-remote-avatar" src="" class="vc-breathing-avatar">
+
+			<!-- 2. 【新增】氛围特效层 (必须加在这里，在头像和摄像头之间) -->
+			<div class="vc-atmosphere-layer"></div>
+			<div class="vc-vignette"></div>
+
 
 			<!-- 2. 你的摄像头 (放在后面，悬浮在右上角) -->
 			<video id="local-video" autoplay playsinline muted></video>
@@ -3293,6 +3325,7 @@
 // ==========================================
 
 // 1. 定义全局变量 (内存缓存，让网页跑得更快)
+const g_videoTTSPlayer = new Audio();
 let friends = [];          // 好友列表
 let chatHistories = {};    // 聊天记录
 // 这一行非常重要，用来兼容你以前的聊天逻辑
@@ -7546,7 +7579,12 @@ let currentFacingMode = 'user';
 let isCameraOn = true;
 
 // 1. 发起视频通话
-async function startVideoCall() { 
+async function startVideoCall() {
+     // ✅ 核心修复：预先解锁音频
+    g_videoTTSPlayer.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQQAAAAAAA==";
+    g_videoTTSPlayer.volume = 1.0;
+    g_videoTTSPlayer.play().catch(e => console.log("音频解锁尝试:", e));
+
 	if(!currentChatId) return;
 	// === 修复：直接读取全局好友列表 ===
 const list = friends || [];
@@ -7802,47 +7840,66 @@ function captureFrame() {
 	// 返回图片数据 (base64格式)
 	return canvas.toDataURL('image/jpeg', 0.6);
 }
-// 【新增】视频专用：直接播放语音，不存文件，不读括号
+
+// 【第三步：替换】视频专用：使用全局播放器播放语音
 async function playVideoTTS(text, vConfig, settings) {
-	// 简单的防抖，防止连续说话重叠
-	if (window.isSpeaking) return; 
-	window.isSpeaking = true;
+    // 简单的防抖，防止连续说话重叠
+    if (window.isSpeaking) return; 
+    window.isSpeaking = true;
 
-	try {
-		const url = `/minimax-proxy/v1/t2a_v2?GroupId=${settings.mmGroupId}`;
-		const payload = {
-			"model": settings.mmModel || "speech-01-turbo",
-			"text": text, 
-			"voice_setting": { 
-				"voice_id": vConfig.voiceId,
-				"speed": parseFloat(vConfig.speed) || 1.0
-			}
-		};
+    try {
+        const url = `/minimax-proxy/v1/t2a_v2?GroupId=${settings.mmGroupId}`;
+        const payload = {
+            "model": settings.mmModel || "speech-01-turbo",
+            "text": text, 
+            "voice_setting": { 
+                "voice_id": vConfig.voiceId,
+                "speed": parseFloat(vConfig.speed) || 1.0
+            }
+        };
 
-		const resp = await fetch(url, {
-			method: "POST",
-			headers: {
-				"Authorization": `Bearer ${settings.mmKey}`,
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(payload)
-		});
+        const resp = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${settings.mmKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
-		const data = await resp.json();
-		if (data.data && data.data.audio) {
-			const audioBlob = hexToBlob(data.data.audio, 'audio/mp3');
-			const audioUrl = URL.createObjectURL(audioBlob);
-			const audio = new Audio(audioUrl);
-			
-			audio.onended = () => { window.isSpeaking = false; };
-			audio.play();
-		} else {
-			window.isSpeaking = false;
-		}
-	} catch (e) {
-		console.error("视频语音播放失败", e);
-		window.isSpeaking = false;
-	}
+        const data = await resp.json();
+        if (data.data && data.data.audio) {
+            const audioBlob = hexToBlob(data.data.audio, 'audio/mp3');
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            // ✅【修改点】使用全局已解锁的播放器
+            g_videoTTSPlayer.src = audioUrl;
+            
+            // 监听播放结束
+            g_videoTTSPlayer.onended = () => { 
+                window.isSpeaking = false; 
+                // 释放内存
+                URL.revokeObjectURL(audioUrl);
+            };
+            
+            // 播放
+            const playPromise = g_videoTTSPlayer.play();
+            
+            // 再次捕获错误，防止浏览器突然拦截
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("视频语音播放被拦截:", error);
+                    window.isSpeaking = false;
+                });
+            }
+
+        } else {
+            window.isSpeaking = false;
+        }
+    } catch (e) {
+        console.error("视频语音播放失败", e);
+        window.isSpeaking = false;
+    }
 }
 
 
