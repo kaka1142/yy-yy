@@ -2881,7 +2881,18 @@
 
 					
 					<div class="wc-chat-input-pill">
-						<input type="text" class="wc-chat-input" id="chat-input-box" placeholder="Talking...">
+						<input 
+    type="text" 
+    class="wc-chat-input" 
+    id="chat-input-box" 
+    placeholder="Talking..."
+    autocomplete="off" 
+    autocorrect="off" 
+    autocapitalize="off" 
+    spellcheck="false" 
+    name="chat-input-random-id"
+>
+
 						<!-- 输入框内右侧：回复(弯箭头) -->
 						<!-- 给它绑定了 triggerAIReply() 事件 -->
 <i class="fas fa-share" onclick="triggerAIReply()" style="cursor:pointer; padding:5px; color:#333;"></i>
