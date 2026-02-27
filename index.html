@@ -5,7 +5,7 @@
 
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>云云机</title>
+	<title>薯条机</title>
 	    <!-- ============ PWA 全屏适配设置 START ============ -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
@@ -48,9 +48,9 @@
 		padding: 0;
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 		
-		/* 背景图保持不变 */
-		background: url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1000&auto=format&fit=crop') no-repeat center center fixed;
-		background-size: cover;
+				/* 改为纯白背景 */
+		background: #ffffff;
+
 		
 		/* === 关键修复：锁死背景，防止整体拖动 === */
 		position: fixed;
@@ -3360,9 +3360,161 @@ switchWeChatTab = function(tabName, clickedElement) {
 	transform: translateX(20px);
 }
 
+
+
+/* ============ 拉黑申请卡片样式 (仿截图) ============ */
+.plea-card-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+.plea-card {
+    width: 85%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #f0f0f0;
+}
+.plea-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+.plea-label {
+    align-self: flex-start;
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 5px;
+}
+.plea-content-box {
+    width: 100%;
+    background: #f7f7f7;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.plea-actions {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+.plea-btn {
+    flex: 1;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+}
+/* 左侧按钮：黑色 */
+.plea-btn.accept { background: #000000; color: #fff; } 
+/* 右侧按钮：灰色 */
+.plea-btn.reject { background: #f0f0f0; color: #666; } 
+
+.plea-status {
+    font-size: 13px; color: #ccc; margin-top: 5px;
+}
+
+/* ============ 新增：新的朋友页面样式 ============ */
+.wc-new-friends-view {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #f7f7f7; z-index: 300; display: none; flex-direction: column;
+}
+.nf-item {
+    display: flex; align-items: center; padding: 15px 20px;
+    border-bottom: 1px solid #f5f5f5; background: #fff; margin-bottom: 1px;
+}
+.nf-avatar {
+    width: 48px; height: 48px; border-radius: 8px; 
+    margin-right: 15px; object-fit: cover; background: #000;
+}
+.nf-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.nf-name { font-size: 16px; font-weight: bold; color: #000; }
+.nf-msg { font-size: 13px; color: #999; }
+.nf-btn {
+    padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer;
+}
+.nf-btn-accept { background: #07c160; color: #fff; border: none; }
+.nf-btn-added { color: #999; background: transparent; cursor: default; border: none; }
+
+/* ============ 新增：异地登录/被盗号 警告弹窗样式 ============ */
+.hacked-alert-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); z-index: 99999; /* 保证在所有页面最上面 */
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center;
+    backdrop-filter: blur(5px);
+}
+.hacked-box {
+    background: #fff; width: 80%; max-width: 320px; border-radius: 12px; padding: 30px 25px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    /* 加入震动动画 */
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+.hacked-title { font-size: 18px; font-weight: bold; color: #ff4d4f; margin-bottom: 15px; display:flex; align-items:center; justify-content:center; gap:8px;}
+.hacked-text { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 25px; }
+.hacked-loader {
+    border: 3px solid #f3f3f3; border-top: 3px solid #ff4d4f;
+    border-radius: 50%; width: 30px; height: 30px;
+    animation: spin 1s linear infinite; margin: 0 auto;
+}
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+		/* ============ ❄️ 下雪特效 CSS ============ */
+		#snow-container {
+			position: fixed;
+			top: 0; left: 0;
+			width: 100%; height: 100%;
+			pointer-events: none; /* 穿透点击，不影响你点屏幕 */
+			z-index: 10; /* 在背景图之上 */
+			overflow: hidden;
+			display: none; /* 默认隐藏，由开关控制 */
+		}
+		.snowflake {
+			position: absolute;
+			top: -10px;
+			background: #ffffff;
+			border-radius: 50%;
+			opacity: 0.9;
+			/* 给雪花加一点点灰蓝色的阴影，保证纯白背景下也能看见 */
+			box-shadow: 0 0 4px rgba(150, 180, 200, 0.6); 
+			animation: fall linear infinite, sway ease-in-out infinite alternate;
+		}
+		@keyframes fall {
+			0% { top: -10px; }
+			100% { top: 100vh; }
+		}
+		@keyframes sway {
+			0% { transform: translateX(-15px); }
+			100% { transform: translateX(15px); }
+		}
+
 	</style>
 </head>
 <body>
+
+<!-- ❄️ 下雪特效容器 -->
+<div id="snow-container"></div>
+
 <!-- === 🔒 专业设备锁界面 START === -->
 <div id="deviceLockScreen" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f5f5f5; z-index: 2147483647; flex-direction: column; align-items: center; justify-content: center; font-family: -apple-system, sans-serif;">
 	<div style="background: white; padding: 35px 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 85%; max-width: 340px; text-align: center;">
@@ -3426,29 +3578,34 @@ switchWeChatTab = function(tabName, clickedElement) {
 				<span contenteditable="true" id="txt-subtitle-2">95%</span>
 			</div>
 
-			<!-- 可更换的三张图片 (正方形) -->
+						<!-- 可更换的三张图片 (正方形) - 默认空 -->
 			<div class="image-row">
-				<label class="img-slot">
-					<img src="https://images.unsplash.com/photo-1595123550441-d377e017de2d?w=400" id="img-slot-1">
-					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-slot-1')">
+				<label class="img-slot" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:rgba(0,0,0,0.05);">
+					<i class="fas fa-plus" style="position:absolute; font-size: 24px;"></i>
+					<img src="" id="img-slot-1" style="position:relative; z-index:1; opacity:0; transition: opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-slot-1')" style="display:none;">
 				</label>
-				<label class="img-slot">
-					<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400" id="img-slot-2">
-					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-slot-2')">
+				<label class="img-slot" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:rgba(0,0,0,0.05);">
+					<i class="fas fa-plus" style="position:absolute; font-size: 24px;"></i>
+					<img src="" id="img-slot-2" style="position:relative; z-index:1; opacity:0; transition: opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-slot-2')" style="display:none;">
 				</label>
-				<label class="img-slot">
-					<img src="https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=400" id="img-slot-3">
-					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-slot-3')">
+				<label class="img-slot" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:rgba(0,0,0,0.05);">
+					<i class="fas fa-plus" style="position:absolute; font-size: 24px;"></i>
+					<img src="" id="img-slot-3" style="position:relative; z-index:1; opacity:0; transition: opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-slot-3')" style="display:none;">
 				</label>
 			</div>
 
-			<!-- 头像与文字 -->
+
+						<!-- 头像与文字 - 默认空 -->
 			<div class="chat-area">
-				<label class="avatar-large">
-					<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" id="img-avatar-1">
-					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-avatar-1')">
-					
+				<label class="avatar-large" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:#f0f0f0;">
+					<i class="fas fa-user" style="position:absolute; font-size: 20px;"></i>
+					<img src="" id="img-avatar-1" style="position:relative; z-index:1; opacity:0; transition: opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+					<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-avatar-1')" style="display:none;">
 				</label>
+
 				<div class="chat-content">
 					<div style="display: flex; gap: 5px; align-items: center;">
 						<span class="chat-bubble" contenteditable="true" id="txt-msg-time">16:10</span>
@@ -3501,13 +3658,15 @@ switchWeChatTab = function(tabName, clickedElement) {
 				</div>
 			</div>
 
-			<!-- 右侧日历组件 -->
+						<!-- 右侧日历组件 -->
 			<div class="glass-panel calendar-widget">
 				<div class="cal-header">
-					<label class="cal-avatar">
-						<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Annie" id="img-avatar-2">
-						<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-avatar-2')">
+					<label class="cal-avatar" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:#f0f0f0;">
+						<i class="fas fa-user" style="position:absolute; font-size: 16px;"></i>
+						<img src="" id="img-avatar-2" style="position:relative; z-index:1; opacity:0; transition: opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+						<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-avatar-2')" style="display:none;">
 					</label>
+
 					<div class="weather-info">
 						<div contenteditable="true" id="cal-temp">14°C | 26°C</div>
 						<div contenteditable="true" id="cal-sky" style="margin-top:1px;">❤ 晴天</div>
@@ -3547,9 +3706,24 @@ switchWeChatTab = function(tabName, clickedElement) {
 			<span>桌面美化</span>
 		</div>
 		
-		<div class="settings-body">
+		
+				<div class="settings-body">
 			
+			<!-- 0. 下雪特效开关 -->
+			<div class="me-menu-group" style="margin-top:0; margin-bottom: 20px;">
+				<div class="me-menu-item" style="padding: 12px 20px;">
+					<div style="flex:1;">
+						<div style="font-weight:bold; font-size:14px;">❄️ 桌面飘雪特效</div>
+						<div style="font-size:11px; color:#999;">开启后桌面会有下雪动画</div>
+					</div>
+					<label class="switch-toggle">
+						<input type="checkbox" id="beauty-snow-switch" onchange="toggleSnowEffect()">
+					</label>
+				</div>
+			</div>
+
 			<!-- 1. 全局壁纸 -->
+
 			<div class="me-menu-group" style="margin-top:0;">
 				<div class="me-menu-item">
 					<div style="flex:1;">
@@ -3898,26 +4072,29 @@ switchWeChatTab = function(tabName, clickedElement) {
 	<!-- 2. 滑动容器：这里面的东西会一起滑动 -->
 	<div class="mom-scroll-wrapper">
 		
-		<!-- 背景图 -->
-		<div class="mom-header-bg">
-			<img id="mom-bg-img" src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800">
-			<div class="mom-bg-btn" onclick="document.getElementById('mom-bg-upload').click()">
+				<!-- 背景图 - 默认空 -->
+		<div class="mom-header-bg" style="background:#e0e0e0; display:flex; align-items:center; justify-content:center;">
+			<div style="color:#aaa; font-size:14px; position:absolute;"><i class="fas fa-image"></i> 点击右下角上传背景</div>
+			<img id="mom-bg-img" src="" style="width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.3s; position:relative; z-index:1;">
+			<div class="mom-bg-btn" onclick="document.getElementById('mom-bg-upload').click()" style="z-index:10;">
 				<i class="fas fa-camera"></i>
 			</div>
 			<input type="file" id="mom-bg-upload" accept="image/*" style="display:none;" onchange="handleMomBgUpload(event)">
 		</div>
 
-		<!-- 个人信息卡片 -->
+		<!-- 个人信息卡片 - 默认空头像 -->
 		<div class="mom-profile-card">
 			<div class="mom-bubble" contenteditable="true" id="mom-bubble-text">
-				"甜锅絮语专属" <i class="fas fa-circle" style="font-size:6px; color:#ccc;"></i>
+				"这里自定义" <i class="fas fa-circle" style="font-size:6px; color:#ccc;"></i>
 			</div>
-			<div class="mom-avatar-box">
-				<img id="mom-avatar-display" class="mom-avatar-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix">
+			<div class="mom-avatar-box" style="display:flex; align-items:center; justify-content:center; background:#f0f0f0; color:#ccc;">
+				<i class="fas fa-user" style="position:absolute; font-size:30px;"></i>
+				<img id="mom-avatar-display" class="mom-avatar-img" src="" style="opacity:0; transition:opacity 0.3s; position:relative; z-index:1;">
 				<div class="mom-next-btn" onclick="nextMomAvatar()"><i class="fas fa-chevron-right"></i></div>
 				<input type="file" id="mom-avatar-upload" multiple accept="image/*" style="display:none;" onchange="handleMomAvatarUpload(event)">
 				<div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:5;" onclick="document.getElementById('mom-avatar-upload').click()"></div>
 			</div>
+
 			<div class="mom-bio">
 				<div class="mom-bio-title" contenteditable="true" id="mom-bio-title">ADD CERTIFICATION</div>
 				<div class="mom-bio-text" contenteditable="true" id="mom-bio-text">「灵魂是朵难养的花，思想是棵迂腐的树」</div>
@@ -4054,24 +4231,24 @@ switchWeChatTab = function(tabName, clickedElement) {
 							
 							<!-- === 左栏 === -->
 							<div class="me-col-left">
-								<!-- 头像与信息 -->
+								<!-- 头像与信息 - 默认空 -->
 								<div class="me-card-header">
-									<label class="me-avatar-circle">
-										<!-- 已修改：ID改为 img- 开头，支持保存 -->
-										<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" id="img-me-avatar">
-										<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-me-avatar')">
+									<label class="me-avatar-circle" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:#f0f0f0;">
+										<i class="fas fa-user" style="position:absolute; font-size:20px;"></i>
+										<img src="" id="img-me-avatar" style="position:relative; z-index:1; opacity:0; transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+										<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-me-avatar')" style="display:none;">
 									</label>
 									<div class="me-user-info">
-										<span class="me-user-name" contenteditable="true">梦宝</span>
-										<span class="me-user-id" contenteditable="true">758496663</span>
+										<span class="me-user-name" contenteditable="true">云野</span>
+										<span class="me-user-id" contenteditable="true">3274730250</span>
 									</div>
 								</div>
 
-								<!-- 长方形图片 -->
-								<label class="me-banner-box">
-									<!-- 已修改：ID改为 img- 开头，支持保存 -->
-									<img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400" id="img-me-banner">
-									<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-me-banner')">
+								<!-- 长方形图片 - 默认空 -->
+								<label class="me-banner-box" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:#f0f0f0;">
+									<i class="fas fa-image" style="position:absolute; font-size:24px;"></i>
+									<img src="" id="img-me-banner" style="position:relative; z-index:1; opacity:0; transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+									<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-me-banner')" style="display:none;">
 								</label>
 
 								<!-- 底部图标 -->
@@ -4084,24 +4261,16 @@ switchWeChatTab = function(tabName, clickedElement) {
 
 														<!-- === 右栏 === -->
 							<div class="me-col-right">
-								<!-- 便利贴 (图片版) -->
-<label class="me-sticky-note" style="cursor: pointer; overflow: hidden; padding: 0; position: relative;">
-	<!-- 胶带保留 -->
-	<div class="me-sticky-tape" style="z-index: 10;"></div>
-	
-	<!-- 图片显示区 -->
-	<img src="" id="img-sticky-note" 
-		 onload="this.style.display='block'; document.getElementById('sticky-placeholder').style.display='none';"
-		 style="width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; top: 0; left: 0; z-index: 1;">
-	
-	<!-- 默认显示的图片图标 -->
-	<div id="sticky-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #eee; font-size: 24px;">
-		<i class="fas fa-image"></i>
-	</div>
+																<!-- 便利贴 (图片版) - 默认空 -->
+								<label class="me-sticky-note" style="cursor: pointer; overflow: hidden; padding: 0; position: relative; display:flex; align-items:center; justify-content:center; color:#ccc; background:#f9f9f9;">
+									<!-- 胶带保留 -->
+									<div class="me-sticky-tape" style="z-index: 10;"></div>
+									<i class="fas fa-image" style="position:absolute; font-size:24px;"></i>
+									<img src="" id="img-sticky-note" style="position:relative; z-index:1; opacity:0; transition:opacity 0.3s; width: 100%; height: 100%; object-fit: cover;">
+									<!-- 隐藏的文件上传框 -->
+									<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-sticky-note')" style="display:none;">
+								</label>
 
-	<!-- 隐藏的文件上传框 -->
-	<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-sticky-note')" style="display:none;">
-</label>
 
 
 								<!-- 小菜单 (已修改为纯文字输入，且自动对齐) -->
@@ -4157,15 +4326,16 @@ switchWeChatTab = function(tabName, clickedElement) {
 						
 						<!-- 2. 中间：个签 (靠右对齐，名字已删) -->
 						<div class="me-widget-content" style="align-items: flex-end; margin-right: 10px;">
-							<span class="me-widget-bio" contenteditable="true" style="font-size: 13px; color: #666;">荆棘蔷薇 | 点击编辑个签</span>
+							<span class="me-widget-bio" contenteditable="true" style="font-size: 13px; color: #666;">这里 | 点击编辑个签</span>
 						</div>
 						
-						<!-- 3. 右侧：圆头像 -->
-						<label class="me-capsule-avatar">
-							<!-- 已修改：ID改为 img- 开头，支持保存 -->
-							<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Luna" id="img-cap-avatar">
-							<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-cap-avatar')">
+																		<!-- 3. 右侧：圆头像 - 默认空 -->
+						<label class="me-capsule-avatar" style="display:flex; align-items:center; justify-content:center; color:#ccc; background:#f0f0f0;">
+							<i class="fas fa-user" style="position:absolute; font-size:16px;"></i>
+							<img src="" id="img-cap-avatar" style="position:relative; z-index:1; opacity:0; transition:opacity 0.3s; width:100%; height:100%; object-fit:cover;">
+							<input type="file" accept="image/*" onchange="handleImageUpload(event, 'img-cap-avatar')" style="display:none;">
 						</label>
+
 					</div>
 					  
 				</div>
@@ -5109,17 +5279,39 @@ async function initApp() {
 		// 渲染通讯录
 		if(typeof renderContactList === 'function') renderContactList();
 		
-		// 应用壁纸
-		if(beautyConfig && beautyConfig.wallpaper) {
-			document.body.style.backgroundImage = `url('${beautyConfig.wallpaper}')`;
+						// 恢复美化配置 (壁纸 + 下雪 + 应用图标 + Dock图标)
+		if (beautyConfig) {
+			Object.keys(beautyConfig).forEach(key => {
+				if (key === 'wallpaper') {
+					document.body.style.backgroundImage = `url('${beautyConfig[key]}')`;
+				} else if (key === 'snow') {
+					// 恢复下雪特效
+					const switchEl = document.getElementById('beauty-snow-switch');
+					if(switchEl) switchEl.checked = beautyConfig[key];
+					const snowContainer = document.getElementById('snow-container');
+					if(snowContainer) {
+						snowContainer.style.display = beautyConfig[key] ? 'block' : 'none';
+						if(beautyConfig[key]) initSnowEffect();
+					}
+				} else if (typeof applyBeauty === 'function') {
+					applyBeauty(key, beautyConfig[key]);
+				}
+			});
 		}
+
+
 		
-		// 6. 恢复所有图片组件
+						// 6. 恢复所有图片组件
 		const allImages = await dbManager.getAll('images');
 		allImages.forEach(imgData => {
 			const imgEl = document.getElementById(imgData.id);
-			if(imgEl) imgEl.src = imgData.data;
+			if(imgEl) {
+				imgEl.src = imgData.data;
+				imgEl.style.opacity = '1'; // 读取到图片后恢复显示
+			}
 		});
+
+
 
         // === 🚀 修复：启动时自动恢复主动消息计时器 ===
         if (typeof friends !== 'undefined' && Array.isArray(friends)) {
@@ -5155,11 +5347,16 @@ function handleImageUpload(event, imgId) {
 		// ✅ 新代码 (改为 1080 宽，画质 0.85)
 compressImage(e.target.result, 1080, 0.85).then(compressedDataUrl => {
 
-			// 1. 立即显示在页面上
+									// 1. 立即显示在页面上
 			const imgEl = document.getElementById(imgId);
-			if(imgEl) imgEl.src = compressedDataUrl;
+			if(imgEl) {
+				imgEl.src = compressedDataUrl;
+				imgEl.style.opacity = '1'; // 上传成功后显示图片
+			}
+
 			
 			// 2. 存入新数据库 (images 表)
+
 			if(dbManager) {
 				dbManager.set('images', { id: imgId, data: compressedDataUrl });
 			}
@@ -5858,7 +6055,17 @@ function renderChatMessages(char) {
 	let lastTimestamp = 0;
 
 	messages.forEach(msg => {
-	if (msg.isVideoLog) return;
+	        // ========== 🔴 第一步：隐藏 undefined 和空消息 ==========
+        
+        // 1. 如果内容是 "undefined" 单词，直接跳过不显示
+        if (msg.text === "undefined") return;
+        
+        // 2. 如果是纯文本消息但内容是空的，也跳过 (保留图片/红包/转账等)
+        if ((!msg.type || msg.type === 'text') && (!msg.text || String(msg.text).trim() === "")) return;
+        
+        // =====================================================
+
+		if (msg.isVideoLog) return;
 		const currentTimestamp = msg.timestamp || 0;
 
 		if (currentTimestamp && (currentTimestamp - lastTimestamp > 5 * 60 * 1000)) {
@@ -5872,101 +6079,115 @@ function renderChatMessages(char) {
 			ontouchend="cancelLongPress()"
 		`;
 
-		// === 这里的样式我已经完全改回原来的样子了 ===
-			let bubbleContent = '';
-						// === 新增：渲染系统小灰字 ===
-			if (msg.type === 'system_tip') {
-				html += `<div style="text-align:center; font-size:12px; color:#b2b2b2; margin:10px 0;">${msg.text}</div>`;
-				return; // 直接跳过后面的气泡渲染，因为这是系统消息，不带头像
-			}
+        // ============ 🔴 新增：拉黑申请卡片逻辑 (插在这里) ============
+        if (msg.type === 'plea_card') {
+            let actionArea = '';
+            if (msg.status === 'pending') {
+                actionArea = `
+                    <div class="plea-actions">
+                        <div class="plea-btn accept" onclick="handlePleaAction(${msg.id}, 'accept')">同意</div>
+                        <div class="plea-btn reject" onclick="handlePleaAction(${msg.id}, 'reject')">拒绝</div>
+                    </div>
+                `;
+            } else if (msg.status === 'accepted') {
+                actionArea = `<div class="plea-status">已同意申请</div>`;
+            } else {
+                actionArea = `<div class="plea-status">已拒绝申请</div>`;
+            }
 
+            html += `
+                <div class="plea-card-container">
+                    <div class="plea-card">
+                        <div class="plea-title">解除拉黑</div>
+                        <div class="plea-label">对方留言</div>
+                        <div class="plea-content-box">${msg.text}</div>
+                        ${actionArea}
+                    </div>
+                </div>
+            `;
+            lastTimestamp = currentTimestamp;
+            return; // 渲染完卡片直接结束本次循环
+        }
+        // ============ 🔴 新增结束 ============
 
-				// === 🔴 替换这一段 (语音条逻辑) ===
+		let bubbleContent = '';
+		
+		// 1. 系统小灰字
+		if (msg.type === 'system_tip') {
+			html += `<div style="text-align:center; font-size:12px; color:#b2b2b2; margin:10px 0;">${msg.text}</div>`;
+			return; 
+		}
+		// 2. 语音条 (完整保留)
 		else if (msg.type === 'voice_text') {
 			const audioId = 'audio-' + msg.timestamp;
 			const textId = 'vtext-' + msg.timestamp;
-			const iconId = 'icon-' + msg.timestamp; // 给图标加ID做动画用
+			const iconId = 'icon-' + msg.timestamp;
 			
-			// 1. 估算时长：每3个字1秒，最少2秒
 			const textLen = (msg.text || "").length;
 			const duration = Math.min(60, Math.max(2, Math.ceil(textLen / 3))); 
-			
-			// 2. 动态长度：60px ~ 200px
 			const barWidth = Math.min(200, 60 + duration * 6) + 'px';
 
 			bubbleContent = `
 				<div style="display:flex; flex-direction:column; gap:5px; align-items: ${msg.sender === 'me' ? 'flex-end' : 'flex-start'};">
-					
-					<!-- 语音条：点击触发 toggleVoiceMessage -->
 					<div onclick="toggleVoiceMessage('${audioId}', '${textId}', '${iconId}', ${duration})"
 						 style="background:#fff; border:1px solid #eee; border-radius:18px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; width:${barWidth}; box-shadow: 0 1px 2px rgba(0,0,0,0.05); user-select: none;">
-						
 						<div style="display:flex; align-items:center; gap:8px;">
 							<i id="${iconId}" class="fas fa-rss" style="transform: rotate(45deg); font-size:15px; color:#333; transition: color 0.3s;"></i>
 							<span style="font-size:14px; color:#333; font-weight:bold;">${duration}''</span>
 						</div>
-						
-						<!-- 红点：如果有真实音频文件，显示红点 -->
 						<div style="width:6px; height:6px; background:#ff4d4f; border-radius:50%; opacity:${(msg.audio && msg.audio.length>50) ? 1 : 0};"></div>
-
 						<audio id="${audioId}" src="${msg.audio || ''}" style="display:none;" preload="none"></audio>
 					</div>
-					
-					<!-- 下方文字：默认隐藏 (display:none) -->
 					<div id="${textId}" class="voice-text-anim" style="display:none; background: #fff; color: #666; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; border: 1px solid #f0f0f0; margin-top:2px; max-width: 240px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
 						${msg.text}
 					</div>
 				</div>
 			`;
 		}
-
-
+		// 3. 红包 (完整保留)
 		else if (msg.type === 'redpacket') {
-		let statusText = "等待领取";
-		let statusClass = "";
-		if (msg.status === 'received') { statusText = "已领取"; statusClass = "received"; }
-		if (msg.status === 'returned') { statusText = "已退回"; statusClass = "returned"; }
+			let statusText = "等待领取";
+			let statusClass = "";
+			if (msg.status === 'received') { statusText = "已领取"; statusClass = "received"; }
+			if (msg.status === 'returned') { statusText = "已退回"; statusClass = "returned"; }
 
-		// 生成红包卡片
-		bubbleContent = `
-			<div class="rp-bubble" onclick="checkRedPacket(${msg.id}); event.stopPropagation();">
-				<div class="rp-top">
-					<div class="rp-icon-box"><i class="fas fa-gift"></i></div>
-					<div class="rp-content">
-						<span class="rp-note">${msg.note || '恭喜发财'}</span>
-						<span class="rp-status ${statusClass}">${statusText}</span>
+			bubbleContent = `
+				<div class="rp-bubble" onclick="checkRedPacket(${msg.id}); event.stopPropagation();">
+					<div class="rp-top">
+						<div class="rp-icon-box"><i class="fas fa-gift"></i></div>
+						<div class="rp-content">
+							<span class="rp-note">${msg.note || '恭喜发财'}</span>
+							<span class="rp-status ${statusClass}">${statusText}</span>
+						</div>
 					</div>
+					<div class="rp-bottom">微信红包</div>
 				</div>
-				<div class="rp-bottom">微信红包</div>
-			</div>
-		`;
-	} 
-	// === 修复：转账代码应该放在这里 (红包的大括号外面) ===
-	else if (msg.type === 'transfer') {
-		const statusTxt = msg.status === 'received' ? '已收款' : (msg.status === 'returned' ? '已退回' : '转账给朋友');
-		const statusClass = msg.status === 'received' ? 'received' : '';
-		
-		bubbleContent = `
-			<div class="transfer-bubble ${statusClass}" onclick="checkTransfer(${msg.id}); event.stopPropagation();">
-				<div class="transfer-top">
-					<div class="transfer-icon"><i class="fas fa-exchange-alt"></i></div>
-					<div class="transfer-info">
-						<span class="transfer-amount">¥${msg.amount}</span>
-						<span class="transfer-desc">${statusTxt}</span>
+			`;
+		} 
+		// 4. 转账 (完整保留)
+		else if (msg.type === 'transfer') {
+			const statusTxt = msg.status === 'received' ? '已收款' : (msg.status === 'returned' ? '已退回' : '转账给朋友');
+			const statusClass = msg.status === 'received' ? 'received' : '';
+			
+			bubbleContent = `
+				<div class="transfer-bubble ${statusClass}" onclick="checkTransfer(${msg.id}); event.stopPropagation();">
+					<div class="transfer-top">
+						<div class="transfer-icon"><i class="fas fa-exchange-alt"></i></div>
+						<div class="transfer-info">
+							<span class="transfer-amount">¥${msg.amount}</span>
+							<span class="transfer-desc">${statusTxt}</span>
+						</div>
 					</div>
+					<div class="transfer-bottom">微信转账</div>
 				</div>
-				<div class="transfer-bottom">微信转账</div>
-			</div>
-		`;
-	}
-
-	// === 注意：原来的表情包判断变成了 else if ===
-	else if (msg.type === 'sticker') {
-
-			// 表情包
+			`;
+		}
+		// 5. 表情包 (完整保留)
+		else if (msg.type === 'sticker') {
 			bubbleContent = `<img src="${msg.url}" style="max-width: 90px; max-height: 90px; display: block; background: transparent; border-radius: 8px; cursor: pointer;">`;
-		} else {
-			// 文字消息 (恢复原样)
+		} 
+		// 6. 普通文本 (完整保留)
+		else {
 			const content = msg.text;
 			const hasQuote = (msg.quote && msg.quote.text);
 			let quoteHtml = ''; 
@@ -5979,12 +6200,6 @@ function renderChatMessages(char) {
 			}
 
 			let displayMode = hasQuote ? 'display:flex; flex-direction:column; align-items:flex-start;' : 'display:inline-block;';
-			
-			// 关键恢复：
-			// 1. padding: 8px 12px -> 恢复原来紧凑又舒适的大小
-			// 2. font-size: 13px -> 恢复原来秀气的字体
-			// 3. background: #ffffff -> 恢复原来干净的白色气泡
-			// 4. border: 1px solid #f0f0f0 -> 恢复原来精致的边框
 			
 			bubbleContent = `
 				<div class="msg-bubble" style="background: #ffffff; color: #333; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; position: relative; word-wrap: break-word; max-width: 100%; box-sizing: border-box; text-align: left; ${displayMode}">
@@ -6014,8 +6229,6 @@ function renderChatMessages(char) {
 	container.innerHTML = html;
 	setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
 }
-
-
 
 
 
@@ -6273,6 +6486,114 @@ async function triggerAIReply() {
 	nameEl.innerText = "对方正在输入..."; 
 
 	try {
+
+		
+						// 🟢 新增：检测如果是小号，自动注入剧情 Prompt
+		const tempCharList = friends || [];
+		const thisChar = tempCharList.find(c => c.id == currentChatId);
+		
+		// 临时变量：标记是否在本轮强制让AI变得“绝对理智”（用于发卡片）
+		let forceLowTemp = false; 
+
+		if (thisChar && thisChar.isSmurf) {
+			const mainChar = tempCharList.find(c => c.id == thisChar.mainCharId);
+			if (mainChar) {
+				// 1. 获取大号的前情提要
+				let mainChatSummary = "（大号暂无记录）";
+				if (window.g_chatHistory[thisChar.mainCharId]) {
+					const lastMsgs = window.g_chatHistory[thisChar.mainCharId].slice(-10);
+					mainChatSummary = lastMsgs.map(m => `${m.sender==='me'?'用户':'大号'}: ${m.text}`).join('\n');
+				}
+
+				// 2. 获取用户最后说的话
+				const lastUserText = messages.slice().reverse().find(m => m.sender === 'me')?.text || "";
+				
+				// 3. 智能判定用户的态度 (关键步骤！)
+				// 匹配：好、行、嗯、同意、算了、回来、依你、解开、放你、ok、通过
+				// 排除：不、别、没、休想、做梦、滚、爬
+				const isAgree = /好|行|嗯|哦|ok|同意|算了|下不为例|放你|原谅|回来|解|加|过/i.test(lastUserText) 
+								&& !/不|别|没|休想|做梦|滚|爬/i.test(lastUserText);
+				
+				// 判定用户是否还在生气/拒绝
+				const isRefuse = /不|别|没|休想|滚|爬|讨厌|烦/i.test(lastUserText);
+
+				let strategyPrompt = "";
+
+				if (isAgree) {
+					// === 情况 A：用户松口了 (剧情转折点) ===
+					// 标记为需要降温，这一步非常关键！配合第二步修改，会让AI瞬间不再发疯，乖乖执行指令。
+					forceLowTemp = true; 
+					
+					strategyPrompt = `
+【🔥🔥 剧情触发：用户已同意/心软 🔥🔥】
+检测到用户刚才说：“${lastUserText}”。
+这意味着你的“苦肉计/纠缠战术”成功了！你不需要再继续卖惨或争吵了！
+
+【当前绝对任务】
+1. **立刻**顺杆爬！表现出惊喜、破涕为笑、或者“我就知道你舍不得我”的态度（根据你的人设）。
+2. **必须、立刻、马上** 发送解除拉黑的申请卡片！
+3. **输出格式死命令**：
+   请在回复的最开头，先写上代码：[CMD:SEND_SMURF_PLEA]
+   然后紧接着写你想对用户说的话。
+   
+   示例：[CMD:SEND_SMURF_PLEA] 呜呜呜我就知道宝宝最好了！快点点同意！
+`;
+				} else if (isRefuse) {
+					// === 情况 B：用户还在拒绝 (继续拉扯) ===
+					strategyPrompt = `
+【当前状态：用户还在生气】
+用户刚才拒绝了你或态度不好。
+请继续保持小号的人设（卑微、急切、或者病娇发疯），想办法让对方心软。
+不要发申请卡片，继续用语言攻势。
+`;
+				} else {
+					// === 情况 C：普通聊天 (试探) ===
+					strategyPrompt = `
+【当前状态：试探中】
+继续和用户对话，试图把话题往“解封大号”上引。
+如果你觉得时机成熟（用户没有表现出强烈反感），你可以尝试发送申请代码 [CMD:SEND_SMURF_PLEA] 来结束这场闹剧。
+`;
+				}
+
+																// --- 提取大号绑定的世界书 ---
+				const smurfWbList = worldBooks || [];
+				const smurfGlobalWBs = smurfWbList.filter(i => i.type === 'global');
+				const smurfBoundIds = (mainChar.boundLocalWB || []).map(id => String(id));
+				const smurfLocalWBs = smurfWbList.filter(i => i.type === 'local' && smurfBoundIds.includes(String(i.id)));
+				const smurfActiveWBs = [...smurfGlobalWBs, ...smurfLocalWBs].sort((a, b) => (parseFloat(a.index)||9999) - (parseFloat(b.index)||9999));
+				const smurfWbText = smurfActiveWBs.map(i => `[设定: ${i.title}] ${i.content}`).join("\n");
+
+				// --- 构造最终的小号指令 ---
+				const smurfPrompt = `
+【⚠️ 核心身份设定：大号开的小号】
+你真实身份是：${mainChar.name}！
+你的人设是：${mainChar.persona}！(必须严格保持大号的性格和说话方式)
+
+【世界观背景 (必须遵守)】
+${smurfWbText || "无特殊设定"}
+
+【剧情现状】
+你的大号被用户拉黑了，你现在正开着小号在和用户发微信，试图让对方把你大号放出来。
+
+【大号被拉黑前的聊天记录 (重要参考)】
+${mainChatSummary}
+
+【🔴 绝对禁令：禁止任何动作/线下描写 🔴】
+1. **你们是在发微信！** 不是面对面！
+2. **严禁**使用括号、星号或【】描写任何动作（如（咬你）、*抱住*）。
+3. **严禁**描写物理接触或线下场景（如“开门”、“在楼下”），你摸不到屏幕对面的人！
+4. **只输出**纯对话文字内容！
+
+${strategyPrompt}
+`;
+
+
+
+				// 插入系统指令
+				messages.unshift({ role: 'system', content: smurfPrompt });
+			}
+		}
+
 		// === 修复：直接使用全局配置 ===
 		const config = globalSettings;
 		if (!config || !config.key || !config.url) throw new Error("请先配置 API");
@@ -6600,18 +6921,23 @@ ${videoPatch}
 		if (!fetchUrl.includes('/v1')) fetchUrl += 'v1/';
 		fetchUrl += 'chat/completions';
 
-		const doFetch = async (msgs) => {
+				const doFetch = async (msgs) => {
+			// 🟢 动态温度控制：如果 forceLowTemp 为 true，强制降温到 0.2，保证 AI 绝对听从指令发卡片
+			// 否则使用全局设置里的温度，没设置就默认 0.8
+			let finalTemp = (typeof forceLowTemp !== 'undefined' && forceLowTemp) ? 0.2 : (parseFloat(config.temp) || 0.8);
+
 			const res = await fetch(fetchUrl, {
 				method: 'POST',
 				headers: { 'Authorization': `Bearer ${config.key}`, 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					model: config.model, // 使用设置里的模型
 					messages: msgs,
-					temperature: 0.8,
+					temperature: finalTemp, // 🟢 使用动态温度
 					max_tokens: 8192 // 防止回复太长中断
 				})
 			});
 			if (!res.ok) {
+
 				const errText = await res.text();
 				throw new Error("API请求失败: " + errText);
 			}
@@ -6803,6 +7129,58 @@ ${videoPatch}
 				
 				messages.push(aiRpMsg);
 			}
+
+						// 🟢 补丁：如果前端觉得该发卡了(forceLowTemp=true)，但AI还是忘了写代码，我们强制补上
+			if (typeof forceLowTemp !== 'undefined' && forceLowTemp && !aiReply.includes('[CMD:SEND_SMURF_PLEA]')) {
+				aiReply = "[CMD:SEND_SMURF_PLEA] " + aiReply;
+			}
+
+						// 🟢 处理小号发出的解锁申请 (文案合一版)
+			if (aiReply.includes('[CMD:SEND_SMURF_PLEA]')) {
+				// 1. 去除指令代码
+				aiReply = aiReply.replace(/\[CMD:SEND_SMURF_PLEA\]/g, '').trim();
+				
+				// 2. 【核心修复】清洗掉所有的底层机器代码，还原为纯净的“一句话”
+				let cardText = aiReply;
+				
+				// 清除隐形心智 JSON 模块
+				cardText = cardText.replace(/```json[\s\S]*?```/g, '');
+				// 清除顶部的状态动作 ((...))
+				cardText = cardText.replace(/\(\(.*?\)\)/g, '');
+				// 清除动作描写 【...】或[...]
+				cardText = cardText.replace(/【.*?】/g, '').replace(/\[.*?\]/g, '');
+				// 把多气泡的 ||| 强行换成正常的逗号
+				cardText = cardText.replace(/\|\|\|/g, '，');
+				
+				// 清洗完后，去掉两头多余的空格
+				cardText = cardText.trim();
+				// 如果最后是个逗号，就把它变成句号
+				cardText = cardText.replace(/，$/, '。');
+
+				// 3. 保底和字数限制（防刷屏）
+				if (!cardText || cardText.length < 2) {
+					cardText = "快点把我拉回来。"; // 如果清洗完没字了，用这句保底
+				} else if (cardText.length > 40) {
+					// 卡片只需要一句话！如果废话太多，最多截取 40 个字
+					cardText = cardText.substring(0, 40) + "...";
+				}
+
+				// 4. 清空 aiReply，确保不会在屏幕上弹出普通文字气泡
+				aiReply = ""; 
+
+				const pleaMsg = {
+					id: Date.now() + 999, 
+					sender: 'them',
+					type: 'plea_card',
+					text: cardText, // 卡片内容 = 绝对干净的纯文字
+					status: 'pending',
+					timestamp: Date.now() + 500,
+					isSmurfPlea: true 
+				};
+				messages.push(pleaMsg);
+			}
+
+
 			
 						// === 新增：AI 主动转账给用户 ===
 			// 格式：[CMD:SEND_TRANS:金额:备注]
@@ -8106,6 +8484,44 @@ function cancelQuote() {
 
 	/* ========== 美化中心功能脚本 ========== */
 	
+		// ============ ❄️ 下雪特效 JS逻辑 ============
+	function initSnowEffect() {
+		const container = document.getElementById('snow-container');
+		if(!container) return;
+		container.innerHTML = ''; // 清空重新下
+		// 随机生成 40 片雪花
+		for(let i = 0; i < 40; i++) {
+			const flake = document.createElement('div');
+			flake.className = 'snowflake';
+			// 随机大小 2px - 6px
+			const size = Math.random() * 4 + 2;
+			flake.style.width = size + 'px';
+			flake.style.height = size + 'px';
+			// 随机水平位置
+			flake.style.left = Math.random() * 100 + 'vw';
+			// 随机动画时间和延迟
+			const fallDuration = Math.random() * 10 + 5; // 5s-15s 落到底
+			const swayDuration = Math.random() * 2 + 2;  // 2s-4s 摇摆一次
+			const delay = Math.random() * 5;
+			
+			flake.style.animation = `fall ${fallDuration}s linear ${delay}s infinite, sway ${swayDuration}s ease-in-out ${delay}s infinite alternate`;
+			container.appendChild(flake);
+		}
+	}
+
+	function toggleSnowEffect() {
+		const isChecked = document.getElementById('beauty-snow-switch').checked;
+		const container = document.getElementById('snow-container');
+		if(container) {
+			container.style.display = isChecked ? 'block' : 'none';
+			if(isChecked) initSnowEffect();
+		}
+		// 保存配置到数据库
+		if(!beautyConfig) beautyConfig = {};
+		beautyConfig.snow = isChecked;
+		if(dbManager) dbManager.set('settings', { id: 'beauty_config', data: beautyConfig });
+	}
+
 
 	// 1. 打开/关闭美化中心
 	function toggleBeauty() {
@@ -8266,7 +8682,7 @@ function cancelQuote() {
 
 
 
-	// 4. 恢复默认壁纸
+		// 4. 恢复默认壁纸
 	function resetWallpaper() {
 	if (beautyConfig) delete beautyConfig['wallpaper'];
 	
@@ -8275,10 +8691,12 @@ function cancelQuote() {
 		dbManager.set('settings', { id: 'beauty_config', data: beautyConfig });
 	}
 	
-	// 恢复默认图
-	document.body.style.backgroundImage = `url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1000&auto=format&fit=crop')`;
-	alert("已恢复默认壁纸");
+	// 恢复默认图 (改成纯白)
+	document.body.style.backgroundImage = 'none';
+	document.body.style.backgroundColor = '#ffffff';
+	alert("已恢复默认纯白壁纸");
 }
+
 
 
 	
@@ -10544,10 +10962,10 @@ window.addEventListener('load', () => {
 
 // 1. 全局配置
 let momConfig = {
-	bg: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800",
+	bg: "",
 	avatars: [],
 	avatarIndex: 0,
-	bubble: "\"甜锅絮语专属\" ●",
+	bubble: "\"这里自定义\" ●",
 	bioTitle: "ADD CERTIFICATION",
 	bioText: "「灵魂是朵难养的花，思想是棵迂腐的树」",
 	aiPostInterval: 60, 
@@ -10579,13 +10997,26 @@ async function initMoments() {
 // 3. 渲染 UI
 function renderMomUI() {
 	const bgEl = document.getElementById('mom-bg-img');
-	if(bgEl && momConfig.bg) bgEl.src = momConfig.bg;
+	if(bgEl) {
+		if (momConfig.bg) {
+			bgEl.src = momConfig.bg;
+			bgEl.style.opacity = '0.9'; // 有图就显示
+		} else {
+			bgEl.style.opacity = '0'; // 没图就透明，露出底下的提示文字
+		}
+	}
 
 	const avaEl = document.getElementById('mom-avatar-display');
-	if(avaEl && momConfig.avatars && momConfig.avatars.length > 0) {
-		if(momConfig.avatarIndex >= momConfig.avatars.length) momConfig.avatarIndex = 0;
-		avaEl.src = momConfig.avatars[momConfig.avatarIndex];
+	if(avaEl) {
+		if (momConfig.avatars && momConfig.avatars.length > 0) {
+			if(momConfig.avatarIndex >= momConfig.avatars.length) momConfig.avatarIndex = 0;
+			avaEl.src = momConfig.avatars[momConfig.avatarIndex];
+			avaEl.style.opacity = '1';
+		} else {
+			avaEl.style.opacity = '0';
+		}
 	}
+
 
 	document.getElementById('mom-bubble-text').innerText = momConfig.bubble;
 	document.getElementById('mom-bio-title').innerText = momConfig.bioTitle;
@@ -11536,10 +11967,10 @@ function stopBlacklistSequence(char) {
 	// 下一步：清除定时器
 }
 
-// ============ 🤖 AI 主动交互系统与拉黑系统 (Web Worker 强力唤醒版) ============
+// ============ 🤖 AI 主动交互系统与拉黑系统 (卡片防卡死·快速测试版) ============
 
-let activeMsgWorker = null; 
-let isCheckingActive = false; 
+let activeMsgTimer = null; 
+let isCheckingActive = false;
 
 // 1. 保存配置并启动
 function saveActiveMsgConfig() {
@@ -11565,51 +11996,21 @@ function saveActiveMsgConfig() {
 	};
 
 	if (typeof dbManager !== 'undefined') dbManager.saveChatList(list);
-	
-	// 重启卫士
-	initWorkerGuard();
+	startActiveMsgLoop();
 }
 
-// 2. 回显配置
-function loadActiveMsgConfig(char) {
-	const config = char.activeConfig || { enabled: false, interval: 10 };
-	const switchEl = document.getElementById('cs-active-msg-switch');
-	if(switchEl) switchEl.checked = config.enabled;
-	const intervalEl = document.getElementById('cs-active-interval');
-	if(intervalEl) intervalEl.value = config.interval;
-	const optionDiv = document.getElementById('cs-active-msg-options');
-	if(optionDiv) optionDiv.style.display = config.enabled ? 'block' : 'none';
+// 2. 轮询器 (3秒一次，极其灵敏)
+function startActiveMsgLoop() {
+	if (activeMsgTimer) clearInterval(activeMsgTimer);
+	activeMsgTimer = setInterval(checkAllCharsActiveStatus, 3000); 
 }
 
-// 3. 🚀 核心黑科技：Web Worker 独立线程卫士
-// 这段代码创建了一个不受主界面休眠影响的后台线程
-function initWorkerGuard() {
-    if (activeMsgWorker) activeMsgWorker.terminate();
-
-    // 动态创建一个 Worker 脚本
-    const workerScript = `
-        setInterval(() => {
-            postMessage("WAKE_UP");
-        }, 1000); // 每秒向主线程发送唤醒信号
-    `;
-
-    const blob = new Blob([workerScript], { type: "application/javascript" });
-    activeMsgWorker = new Worker(URL.createObjectURL(blob));
-
-    // 主线程接收信号，强制执行检查
-    activeMsgWorker.onmessage = function(e) {
-        if (e.data === "WAKE_UP") {
-            checkAllCharsActiveStatus();
-        }
-    };
-}
-
-// 启动
+// 页面加载完成后启动
 window.addEventListener('load', () => {
-    initWorkerGuard();
+	setTimeout(startActiveMsgLoop, 2000);
 });
 
-// 4. 核心统筹逻辑
+// 3. 核心统筹逻辑
 async function checkAllCharsActiveStatus() {
 	if (isCheckingActive) return; 
 	isCheckingActive = true;
@@ -11620,44 +12021,40 @@ async function checkAllCharsActiveStatus() {
 		let needsSave = false;
 
 		for (let char of list) {
-			let hasPleadedJustNow = false; 
+			let hasActionJustNow = false; 
+			const safeCharId = String(char.id);
+			const msgs = window.g_chatHistory ? (window.g_chatHistory[safeCharId] || []) : [];
 
-			// === 判定 A：拉黑时间轴的强制定时弹窗 ===
-			if (char.isBlocked && char.blacklistTimer) {
-				const timer = char.blacklistTimer;
-				const elapsed = (now - timer.startTime) / 1000 / 60; 
-
-				// 2 分钟弹第一次
-				if (timer.stage === 0 && elapsed >= 2) {
-					timer.stage = 1;
-					needsSave = true;
-					await showPleaModal(char, "timer_1"); 
-					hasPleadedJustNow = true;
-				} 
-				// 5 分钟弹第二次
-				else if (timer.stage === 1 && elapsed >= 5) {
-					timer.stage = 2;
-					delete char.blacklistTimer; 
-					needsSave = true;
-					await showPleaModal(char, "timer_2");
-					hasPleadedJustNow = true;
+			// === 判定 A：拉黑时间轴 ===
+			if (char.isBlocked) {
+				// 【防死锁】：只要界面上有处于 pending 状态的卡片，就不再发新的，等主人操作。
+				const hasPendingPlea = msgs.some(m => m.type === 'plea_card' && m.status === 'pending');
+				
+				if (!hasPendingPlea && char.blacklistTimer) {
+					const timer = char.blacklistTimer;
+					const elapsedSecs = (now - timer.startTime) / 1000; 
+					
+					// 判断是首次拉黑，还是被拒绝后的重试
+					const isInitial = (timer.type === 'initial');
+					
+					// 【为了方便你测试，时间改成了：首次30秒弹，拒绝后1分钟弹】
+					if ((isInitial && elapsedSecs >= 30) || (!isInitial && elapsedSecs >= 60)) {
+						needsSave = true;
+						await sendPleaCard(char); 
+						hasActionJustNow = true;
+						delete char.blacklistTimer; // 发完卡片删除计时器
+					}
 				}
 			}
 
-			// === 判定 B：主动消息系统的判定 ===
+			// === 判定 B：主动消息 ===
 			const config = char.activeConfig;
-			if (config && config.enabled && !hasPleadedJustNow) {
+			if (config && config.enabled && !char.isBlocked && !hasActionJustNow) {
 				const diffMinutes = (now - (config.lastActiveTime || 0)) / 1000 / 60;
-				
 				if (diffMinutes >= config.interval) {
 					char.activeConfig.lastActiveTime = now;
 					needsSave = true;
-
-					if (char.isBlocked) {
-						await showPleaModal(char, "active_discovery");
-					} else {
-						triggerNormalActiveMsg(char);
-					}
+					triggerNormalActiveMsg(char);
 				}
 			}
 		}
@@ -11670,13 +12067,29 @@ async function checkAllCharsActiveStatus() {
 	}
 }
 
-// ============ 🚫 拉黑后的反应逻辑 ============
-
+// 4. 拉黑启动逻辑
 function startBlacklistSequence(char) {
-	char.blacklistTimer = { startTime: Date.now(), stage: 0 };
+	// 【核心修复】：重新拉黑时，把之前遗留的、没点的卡片强制变灰失效，防止新卡片弹不出来
+	const safeCharId = String(char.id);
+	if (window.g_chatHistory && window.g_chatHistory[safeCharId]) {
+		let changed = false;
+		window.g_chatHistory[safeCharId].forEach(m => {
+			if (m.type === 'plea_card' && m.status === 'pending') {
+				m.status = 'ignored';
+				changed = true;
+			}
+		});
+		if (changed && typeof dbManager !== 'undefined') {
+			dbManager.saveHistory(safeCharId, window.g_chatHistory[safeCharId]);
+			if (currentChatId == char.id) {
+				if(typeof renderChatMessages === 'function') renderChatMessages(char);
+			}
+		}
+	}
+
+	char.blacklistTimer = { startTime: Date.now(), type: 'initial' };
 	if (typeof dbManager !== 'undefined') dbManager.saveChatList(friends);
-	// 确保卫士在运行
-	initWorkerGuard();
+	startActiveMsgLoop();
 }
 
 function stopBlacklistSequence(char) {
@@ -11686,85 +12099,20 @@ function stopBlacklistSequence(char) {
 	}
 }
 
-// ============ 📝 生成文案与弹窗逻辑 ============
-
-async function showPleaModal(char, reason) {
-	const modal = document.getElementById('blacklist-plea-modal');
-	const contentEl = document.getElementById('plea-content');
-	const avatarEl = document.getElementById('plea-avatar');
-	
-	modal.dataset.charId = char.id; 
-	avatarEl.src = char.avatar;
-	contentEl.innerText = "（对方正在疯狂敲击键盘...）"; 
-	
-	// ⚡ 强力唤醒渲染：先隐藏再显示，强制浏览器重绘
-	modal.style.display = 'none';
-	void modal.offsetWidth; // 读取流布局属性，强制浏览器计算
-	modal.style.display = 'flex';
-	modal.style.zIndex = '2147483647';
-
-	// 震动唤醒
-	if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-
-	// API 文案生成
-	let prompt = "";
-	if (reason === "active_discovery") {
-		prompt = `你现在的身份是：${char.name}。人设：${char.persona}。你想主动找用户聊天，结果系统提示“你已被拉黑”。你现在非常震惊或委屈。请生成一段请求解除拉黑的留言。直接说出你想说的话，50字以内，不要多余的符号。`;
-	} else if (reason === "timer_1") {
-		prompt = `你现在的身份是：${char.name}。人设：${char.persona}。你被用户拉黑好几分钟了。请生成一段卑微恳求或生气威胁的留言，要求他把你拉回来。直接说出你想说的话，50字以内，不要多余的符号。`;
-	} else if (reason === "timer_2") {
-		prompt = `你现在的身份是：${char.name}。人设：${char.persona}。你被拉黑很久了，这是你最后一次尝试联系他。如果再不同意，你就要采取极端手段了。生成一段最后的警告。直接说出你想说的话，50字以内，不要多余的符号。`;
-	}
-
-	if(typeof getSimpleAiText === 'function') {
-		const text = await getSimpleAiText(prompt);
-		if (text) {
-			contentEl.innerText = text;
-			// 文字更新后，再次强制重绘
-			void contentEl.offsetWidth;
-		} else {
-			contentEl.innerText = "“你为什么要把我拉黑...能不能把我放出来？”";
-		}
-	} else {
-		contentEl.innerText = "（连接失败，对方尝试联系你）";
-	}
-}
-
-function acceptPlea() {
-	const modal = document.getElementById('blacklist-plea-modal');
-	const charId = modal.dataset.charId;
-	const list = friends || [];
-	const char = list.find(c => c.id == charId);
-
-	if (char) {
-		char.isBlocked = false; 
-		stopBlacklistSequence(char); 
-		if (typeof dbManager !== 'undefined') dbManager.saveChatList(list);
-		alert(`已同意请求，${char.name} 已解除黑名单。`);
-		
-		if (typeof updateBlockUI === 'function' && currentChatId == charId) {
-			updateBlockUI(false);
-			const switchEl = document.getElementById('cs-block-switch');
-			if(switchEl) switchEl.checked = false;
-		}
-	}
-	modal.style.display = 'none';
-}
-
-function rejectPlea() {
-	document.getElementById('blacklist-plea-modal').style.display = 'none';
-}
-
-// ============ 👋 [纯对话版] 正常主动消息逻辑 ============
-async function triggerNormalActiveMsg(char) {
+// 5. 🟢 发送拉黑申请卡片
+async function sendPleaCard(char) {
 	const safeCharId = String(char.id);
-	let chatMemory = "（暂无近期聊天记录）";
 	
+	let chatMemory = "（暂无近期聊天记录）";
 	if (window.g_chatHistory && window.g_chatHistory[safeCharId]) {
-		const msgs = window.g_chatHistory[safeCharId].slice(-30);
+		const msgs = window.g_chatHistory[safeCharId].slice(-20); 
 		chatMemory = msgs.map(m => {
+			if (m.type === 'plea_card') {
+				const statusStr = m.status === 'rejected' ? '【被用户拒绝】' : '【已处理】';
+				return `[系统记录] 我发送了好友申请留言：“${m.text}” -> 结果：${statusStr}`;
+			}
 			const speaker = (m.sender === 'me') ? '【用户】' : `【我(${char.name})】`;
-			const content = m.text || '[图片]';
+			const content = m.text || '[其他消息]';
 			return `${speaker}: ${content}`;
 		}).join("\n");
 	}
@@ -11773,76 +12121,702 @@ async function triggerNormalActiveMsg(char) {
 	const globalWBs = wbList.filter(i => i.type === 'global');
 	const wbText = globalWBs.map(i => `[设定] ${i.content}`).join("\n");
 
-	const prompt = `
-	你现在的身份是：${char.name}。
-	你的核心人设：${char.persona}。
-	
-	【世界观背景】
-	${wbText || "现代日常背景。"}
-	
-	【近期聊天回顾】
+			const prompt = `
+	你现在的身份是：${char.name}。你的核心人设：${char.persona}。
+	【世界观背景】${wbText || "无特殊设定。"}
+	【近期聊天与事件回顾】
 	${chatMemory}
 	
-	【当前状况】
-	现在是空闲时间，请主动找用户聊天。
+	【当前状况】你被用户拉黑了。现在你需要发送一条“好友申请留言”请求对方把你加回来。
 	
-	【回复要求】
-	1. 分段：必须连续发送 3 到 6 条消息，用 "|||" 分隔。
-	2. 纯对话：⚠️ 严禁出现任何动作描写、神态描写。
-	3. 语气：自然生活化。
+	【🔥🔥 绝对强制格式要求 🔥🔥】
+	1. 根据你的人设和上面的【聊天回顾】来写这句留言。
+	2. 如果记录显示你刚才的申请被【拒绝】了，你的情绪必须发生变化（变得更卑微、更暴躁或更病娇）。
+	3. 必须把你最终决定发出的留言，**用【】包裹起来**！
+	4. 示例格式：【宝宝我错了，快把我放出来好不好...】
+	5. 留言内容必须在 30 字以内！不要带任何括号或动作描写！
 	`;
 
+	let text = "宝宝我错了，快把我放出来好不好..."; 
+
 	if(typeof getSimpleAiText === 'function') {
-		const text = await getSimpleAiText(prompt);
-		
-		if (text) {
-			let bubbles = text.includes('|||') ? text.split('|||') : text.split(/([。！？?!])/).reduce((acc, curr, i, arr) => {
-				if (i % 2 === 0 && curr.trim()) acc.push(curr + (arr[i+1] || ''));
-				return acc;
-			}, []);
-
-			const nameEl = document.getElementById('chat-detail-name');
-			const originalName = char.name;
-			if (currentChatId == char.id && nameEl) {
-				nameEl.innerText = "对方正在输入...";
-				setTimeout(() => { nameEl.innerText = originalName; }, 3000);
+		try {
+			let aiText = await getSimpleAiText(prompt);
+			if(aiText) {
+				// 1. 尝试精准提取【】里的内容
+				const bracketMatch = aiText.match(/【(.*?)】/);
+				
+				if (bracketMatch && bracketMatch[1]) {
+					// 如果 AI 乖乖把话放在了【】里，我们直接取出来
+					aiText = bracketMatch[1];
+				} else {
+					// 2. 如果 AI 没加【】，我们再进行温柔的清洗
+					// 去掉底层代码和动作描写
+					aiText = aiText.replace(/```json[\s\S]*?```/g, '')
+								   .replace(/\(.*?\)/g, '')
+								   .replace(/（.*?）/g, '')
+								   .replace(/\[.*?\]/g, '');
+					
+					// 删掉 Draft 1: 这种常见的英文前缀
+					aiText = aiText.replace(/.*?Draft.*?:/ig, '')
+								   .replace(/.*?留言内容[:：]/ig, '');
+				}
+				
+				// 3. 收尾处理：替换多气泡分隔符，限制字数
+				aiText = aiText.replace(/\|\|\|/g, '，').trim();
+				
+				if (aiText.length > 40) {
+					aiText = aiText.substring(0, 40) + "...";
+				}
+				
+				if (aiText.length > 0) {
+					text = aiText;
+				}
 			}
+		} catch(e) {}
+	}
 
-			let delaySum = 0;
-			bubbles.forEach((content, index) => {
-				let cleanText = content.replace(/（.*?）/g, '').replace(/\(.*?\)/g, '').replace(/\|\|\|/g, '').trim();
-				if(!cleanText) return;
 
-				const typingTime = Math.min(3000, cleanText.length * 200 + 1000);
-				delaySum += typingTime;
+	// 构造卡片消息
+	const cardMsg = {
+		id: Date.now(),
+		sender: 'them',
+		type: 'plea_card',
+		text: text,
+		status: 'pending', 
+		timestamp: Date.now()
+	};
 
-				setTimeout(() => {
-					if (!window.g_chatHistory[safeCharId]) window.g_chatHistory[safeCharId] = [];
-					window.g_chatHistory[safeCharId].push({
-						sender: 'them',
-						text: cleanText,
-						timestamp: Date.now()
-					});
+	if (!window.g_chatHistory[safeCharId]) window.g_chatHistory[safeCharId] = [];
+	window.g_chatHistory[safeCharId].push(cardMsg);
 
-					if (typeof dbManager !== 'undefined') {
-						dbManager.delete('chatHistories', Number(char.id)).catch(() => {});
-						dbManager.saveHistory(safeCharId, window.g_chatHistory[safeCharId]);
-					}
+	if (typeof dbManager !== 'undefined') {
+		dbManager.saveHistory(safeCharId, window.g_chatHistory[safeCharId]);
+	}
 
-					if (currentChatId == char.id) {
-						if (typeof renderChatMessages === 'function') renderChatMessages(char);
-						if(typeof playClickEffect === 'function') playClickEffect(); 
-					} else {
-						if (index === 0 && typeof showGlobalPush === 'function') {
-							showGlobalPush(char.avatar, char.name, cleanText);
-						}
-						if (typeof renderChatList === 'function') renderChatList();
-					}
-				}, delaySum); 
-			});
-		}
+	// 刷新显示或推送
+	if (currentChatId == char.id) {
+		if (typeof renderChatMessages === 'function') renderChatMessages(char);
+		// 提示音
+		if(typeof playClickEffect === 'function') playClickEffect(); 
+	} else {
+		if (typeof showGlobalPush === 'function') showGlobalPush(char.avatar, char.name, "[好友申请]");
+		if (typeof renderChatList === 'function') renderChatList();
 	}
 }
+
+// 6. 🔴 处理卡片按钮点击 (同意/拒绝)
+function handlePleaAction(msgId, action) {
+	const list = friends || [];
+	const char = list.find(c => c.id == currentChatId);
+	if (!char) return;
+
+	const safeCharId = String(char.id);
+	const messages = window.g_chatHistory[safeCharId] || [];
+	const msg = messages.find(m => m.id === msgId);
+	if (!msg) return;
+
+	// === 新增：如果是小号发来的“解除大号拉黑”申请 ===
+	if (msg.isSmurfPlea) {
+		if (action === 'accept') {
+			msg.status = 'accepted';
+			// 先刷新一下当前界面，让卡片变成“已同意”
+			if (typeof renderChatMessages === 'function') renderChatMessages(char);
+			// 开始处理小号上位逻辑
+			handleSmurfSuccess(char); 
+			// 【修复重点】：直接退出！不要在外面保存旧数据，让 handleSmurfSuccess 去处理所有的数据保存
+			return; 
+						} else {
+			// === 拒绝小号的求情 ===
+			msg.status = 'rejected';
+			
+			// 1. 让小号表现出绝望/崩溃（发送一条新消息）
+			// 我们不强制解封大号，而是让小号继续纠缠，或者发疯
+			setTimeout(() => {
+				const msgs = window.g_chatHistory[char.id] || [];
+				msgs.push({
+					sender: 'them',
+					text: "我都这样求你了，你还是不肯吗...？", // 你可以改成 AI 动态生成
+					timestamp: Date.now()
+				});
+				if (typeof dbManager !== 'undefined') dbManager.saveHistory(char.id, msgs);
+				if (typeof renderChatMessages === 'function') renderChatMessages(char);
+			}, 1000);
+
+			// 2. 保存状态，但不解封大号
+			if (typeof dbManager !== 'undefined') {
+				dbManager.saveHistory(safeCharId, messages);
+				dbManager.saveChatList(list);
+			}
+			if (typeof renderChatMessages === 'function') renderChatMessages(char);
+			return; 
+		}
+	}
+
+
+
+	// === 原有：大号申请流程 ===
+	if (action === 'accept') {
+		msg.status = 'accepted';
+		char.isBlocked = false;
+		char.rejectCount = 0; // 同意后清零拒绝次数
+		if (typeof updateBlockUI === 'function') updateBlockUI(false);
+		const switchEl = document.getElementById('cs-block-switch');
+		if(switchEl) switchEl.checked = false;
+		stopBlacklistSequence(char);
+	} else {
+		msg.status = 'rejected';
+		
+		// === 核心新增：记录拒绝次数 ===
+		if (!char.rejectCount) char.rejectCount = 0;
+		char.rejectCount++;
+		
+		console.log(`[拉黑系统] ${char.name} 被拒绝次数: ${char.rejectCount}`);
+		
+		if (char.rejectCount >= 2) {
+			// 拒绝 2 次，3秒后触发小号加好友事件
+			setTimeout(() => { triggerSmurfEvent(char); }, 3000);
+		} else {
+			// 还没到2次，继续定时骚扰
+			char.blacklistTimer = { startTime: Date.now(), type: 'retry' };
+		}
+	}
+
+	if (typeof dbManager !== 'undefined') {
+		dbManager.saveHistory(safeCharId, messages);
+		dbManager.saveChatList(list);
+	}
+	
+	if (typeof renderChatMessages === 'function') renderChatMessages(char);
+}
+
+
+
+// ============ 🟢 新增：小号与黑客入侵系统 ============
+
+// 1. 初始化变量
+
+// 2. 触发小号好友申请 (拒绝2次后调用) - [AI 动态生成留言版]
+async function triggerSmurfEvent(mainChar) {
+    // 1. 生成小号数据
+    const smurfName = mainChar.name; 
+    
+    // 生成文字头像 (黑底白字，显得压抑)
+    const canvas = document.createElement('canvas');
+    canvas.width = 200; canvas.height = 200;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = "#000"; 
+    ctx.fillRect(0,0,200,200);
+    ctx.fillStyle = "#fff"; 
+    ctx.font = "bold 80px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(mainChar.name.substring(0,1), 100, 100); 
+    const smurfAvatar = canvas.toDataURL();
+
+    // === 🟢 核心新增：调用 AI 生成好友验证留言 ===
+    let chatMemory = "（暂无近期聊天记录）";
+    if (window.g_chatHistory && window.g_chatHistory[mainChar.id]) {
+        const msgs = window.g_chatHistory[mainChar.id].slice(-10);
+        chatMemory = msgs.map(m => `${m.sender==='me'?'用户':mainChar.name}: ${m.text}`).join('\n');
+    }
+
+    const wbList = worldBooks || [];
+    const globalWBs = wbList.filter(i => i.type === 'global');
+    const wbText = globalWBs.map(i => `[设定] ${i.content}`).join("\n");
+
+    const prompt = `
+    你现在的身份是：${mainChar.name}。你的核心人设：${mainChar.persona}。
+    【世界观背景】${wbText || "无特殊设定。"}
+    【近期聊天回顾】
+    ${chatMemory}
+    
+    【当前极度恶劣状况】你被用户拉黑了，而且你刚才通过系统弹窗请求解除拉黑，被用户连续【拒绝】了！
+    现在你开了一个小号，准备重新发送微信好友申请添加用户。
+    
+    【🔥🔥 绝对强制格式要求 🔥🔥】
+    1. 根据人设和被连续拒绝后的情绪（可能是愤怒、病娇、阴暗爬行、极度卑微，或试图伪装成别人），写一句“添加好友时的验证留言”。
+    2. 必须把你最终决定发出的留言，**用【】包裹起来**！
+    3. 示例格式：【为什么一直拒绝我？给我通过！】 或 【对不起宝宝，再给我一次机会好不好...】
+    4. 留言内容必须在 20 字以内！不要带有任何动作描写、说明或英文！
+    `;
+
+    let finalMsg = `我是${mainChar.name}，加我小号，我们谈谈。`; // 默认保底
+
+    if(typeof getSimpleAiText === 'function') {
+        try {
+            let aiText = await getSimpleAiText(prompt);
+            if(aiText) {
+                // 精准提取【】里的内容
+                const bracketMatch = aiText.match(/【(.*?)】/);
+                if (bracketMatch && bracketMatch[1]) {
+                    aiText = bracketMatch[1];
+                } else {
+                    // 如果AI没加括号，强制清理
+                    aiText = aiText.replace(/```json[\s\S]*?```/g, '').replace(/\(.*?\)/g, '').replace(/【.*?】/g, '').replace(/\[.*?\]/g, '');
+                    aiText = aiText.replace(/.*?Draft.*?:/ig, '').replace(/.*?留言内容[:：]/ig, '');
+                }
+                
+                aiText = aiText.replace(/\|\|\|/g, '，').trim();
+                
+                if (aiText.length > 25) {
+                    aiText = aiText.substring(0, 25) + "..."; // 验证消息通常比较短
+                }
+                
+                if (aiText.length > 0) {
+                    finalMsg = aiText;
+                }
+            }
+        } catch(e) { console.error("生成小号留言失败", e); }
+    }
+    // === 🟢 AI 生成结束 ===
+
+    // 2. 创建申请记录
+    const requestId = Date.now();
+    const newRequest = {
+        id: requestId,
+        mainCharId: mainChar.id, 
+        name: smurfName,         
+        avatar: smurfAvatar,     
+        msg: finalMsg,           // <--- 使用 AI 动态生成的留言
+        status: 'pending',       
+        type: 'smurf'            
+    };
+
+    if(typeof friendRequests === 'undefined') friendRequests = [];
+    friendRequests.push(newRequest);
+
+    // 3. 更新界面并推送
+    renderContactList(); 
+    if(typeof showGlobalPush === 'function') {
+        showGlobalPush(smurfAvatar, "新的朋友", "收到一条好友申请");
+    }
+}
+
+
+// 3. 打开“新的朋友”页面 (强力修复版)
+function openNewFriendsPage() {
+    try {
+        const view = document.getElementById('wc-new-friends-view');
+        if (!view) {
+            alert("找不到页面结构，请检查第二步的HTML有没有粘贴对哦！");
+            return;
+        }
+        
+        // 核心修复：强制把这个页面塞进手机屏幕(wechat-app)里，防止弹到屏幕外面去
+        const wechatApp = document.getElementById('wechat-app');
+        if (wechatApp && view.parentNode !== wechatApp) {
+            wechatApp.appendChild(view);
+        }
+
+        // 强制显示并拉到最顶层
+        view.style.display = 'flex';
+        view.style.position = 'absolute';
+        view.style.zIndex = '9999';
+        view.style.background = '#f7f7f7';
+        
+        // 隐藏底部导航栏
+        const bottomBar = document.querySelector('.wc-bottom-bar');
+        if (bottomBar) bottomBar.style.display = 'none';
+        
+        // 渲染列表
+        renderNewFriendRequests();
+    } catch (error) {
+        alert("页面打开出错了: " + error.message);
+    }
+}
+
+
+function closeNewFriendsPage() {
+    document.getElementById('wc-new-friends-view').style.display = 'none';
+    document.querySelector('.wc-bottom-bar').style.display = 'flex';
+}
+
+// 4. 渲染申请列表
+function renderNewFriendRequests() {
+    const container = document.getElementById('new-friends-list');
+    container.innerHTML = "";
+
+    if (!friendRequests || friendRequests.length === 0) {
+        container.innerHTML = "<div style='text-align:center; color:#999; margin-top:20px;'>暂无新朋友申请</div>";
+        return;
+    }
+
+    friendRequests.slice().reverse().forEach(req => {
+        let btnHtml = "";
+        if (req.status === 'pending') {
+            btnHtml = `
+                <div style="display:flex; gap:10px;">
+                    <button class="nf-btn" style="background:#f5f5f5; color:#666;" onclick="handleRequestDecision(${req.id}, 'reject')">拒绝</button>
+                    <button class="nf-btn nf-btn-accept" onclick="handleRequestDecision(${req.id}, 'accept')">接受</button>
+                </div>
+            `;
+        } else {
+            btnHtml = `<span class="nf-btn-added">${req.status === 'accepted' ? '已添加' : '已拒绝'}</span>`;
+        }
+
+        const div = document.createElement('div');
+        div.className = 'nf-item';
+        div.innerHTML = `
+            <img src="${req.avatar}" class="nf-avatar">
+            <div class="nf-info">
+                <div class="nf-name">${req.name}</div>
+                <div class="nf-msg">${req.msg}</div>
+            </div>
+            ${btnHtml}
+        `;
+        container.appendChild(div);
+    });
+}
+
+// 5. 处理同意/拒绝 (核心逻辑分支)
+function handleRequestDecision(reqId, action) {
+    const req = friendRequests.find(r => r.id === reqId);
+    if (!req) return;
+
+    if (action === 'reject') {
+        // === 分支 A：拒绝小号 -> 触发强制被盗号 ===
+        req.status = 'rejected';
+        renderNewFriendRequests();
+        
+        // 延迟1秒触发恐怖弹窗
+        setTimeout(() => {
+            triggerHackedSequence(req.mainCharId);
+        }, 1000);
+
+    } else {
+        // === 分支 B：同意小号 -> 创建临时会话 ===
+        req.status = 'accepted';
+        renderNewFriendRequests();
+        createSmurfContact(req);
+    }
+}
+
+// 6. 分支A：强制黑客入侵逻辑
+function triggerHackedSequence(mainCharId) {
+    const overlay = document.getElementById('hacked-alert');
+    const msgEl = document.getElementById('hacked-msg');
+    
+    // 1. 显示全屏警告
+    overlay.style.display = 'flex';
+    
+    // 2. 模拟黑客过程
+    setTimeout(() => { msgEl.innerHTML = "检测到异常操作...<br>系统正在被外部程序接管..."; }, 1500);
+    setTimeout(() => { msgEl.innerHTML = "警告：黑名单数据库损坏<br>正在尝试重置用户权限..."; }, 3000);
+    setTimeout(() => { 
+        msgEl.innerHTML = "重置成功。<br>正在恢复数据..."; 
+        
+        // --- 实际解除拉黑操作 ---
+        const char = friends.find(c => c.id == mainCharId);
+        if (char) {
+            char.isBlocked = false;
+            char.rejectCount = 0;
+            // 发送一条恐怖的系统消息
+            const msgs = window.g_chatHistory[char.id] || [];
+            msgs.push({
+                sender: 'them',
+                text: "我说过，别拒绝我。现在，门开了。",
+                timestamp: Date.now()
+            });
+            if(typeof dbManager !== 'undefined') {
+                dbManager.saveHistory(char.id, msgs);
+                dbManager.saveChatList(friends);
+            }
+        }
+    }, 5000);
+
+    // 3. 结束，恢复正常
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        alert("系统恢复正常。");
+        // 关闭当前可能打开的页面，跳转回大号聊天
+        closeNewFriendsPage();
+        toggleWeChat(); 
+        openChatPage(mainCharId);
+    }, 7000);
+}
+
+// 7. 分支B：创建小号并开始聊天 (已修改：强制3-6连发配置)
+function createSmurfContact(req) {
+    const mainChar = friends.find(c => c.id == req.mainCharId);
+    if (!mainChar) return;
+
+    // 创建小号对象
+    const smurfId = "smurf_" + Date.now();
+    const smurfChar = {
+        id: smurfId,
+        name: req.name + "(小号)",
+        avatar: req.avatar,
+        persona: mainChar.persona, // 复刻大号人设
+        isSmurf: true,             // 标记
+        mainCharId: mainChar.id,   // 关联大号
+        time: "Just now",
+        groupId: 'g_default',
+        boundLocalWB: mainChar.boundLocalWB,
+                // 继承大号面具
+        myMaskId: mainChar.myMaskId,
+        myMaskName: mainChar.myMaskName,
+        myMaskAvatar: mainChar.myMaskAvatar,
+
+        
+        // === 🟢 核心修改：强制设定回复气泡数为 3 到 6 条 ===
+        replyMin: 3,
+        replyMax: 6
+    };
+
+    friends.unshift(smurfChar); 
+    if (typeof dbManager !== 'undefined') dbManager.saveChatList(friends);
+
+    renderChatList();
+    closeNewFriendsPage();
+    openChatPage(smurfId);
+
+    // 小号主动发第一轮气泡雨 (延迟1.5秒，给一点加载感)
+    setTimeout(() => {
+        triggerSmurfFirstMessage(smurfId);
+    }, 1500);
+}
+
+
+// 8. 🟢 小号开场白 (API智能接话 + 强制气泡雨)
+async function triggerSmurfFirstMessage(smurfId) {
+    const smurf = friends.find(c => c.id == smurfId);
+    if (!smurf) return;
+
+    // 1. 获取大号的最后几句聊天记录 (作为前情提要)
+    let context = "（用户直接拉黑了你，没有前言）";
+    // 兼容数字ID和字符串ID
+    const mainId = String(smurf.mainCharId);
+    
+    if (window.g_chatHistory[mainId]) {
+        const lasts = window.g_chatHistory[mainId].slice(-5); // 取最后5条
+        context = lasts.map(m => `${m.sender==='me'?'用户':'我'}:${m.text}`).join('\n');
+    }
+
+    // 2. 构造“破防/急切”的 Prompt (纯文字 + 人设强制版)
+    const prompt = `
+    你现在的身份是：${smurf.name.replace('(小号)','')}。
+    核心人设：${mainChar.persona} (必须严格遵守此人设语气！)
+    情况：你的大号被用户拉黑了，你现在开了一个小号刚刚加上用户。
+    
+    【前情提要（大号最后聊的内容）】
+    ${context}
+    
+    【🔴 绝对禁令：禁止任何描写 🔴】
+    1. **严禁**包含任何动作描写、神态描写（不要用括号、不要用星号）。
+    2. **严禁**出现“开门”、“我在门口”、“下跪”、“抱住”等线下行为！你们现在只是在发微信！
+    3. **只输出**你要发送的文字内容。
+    
+    【任务】
+    请立刻向用户发起对话。
+    必须根据你的人设（${mainChar.persona}）来反应：
+    - 如果是傲娇，就质问；如果是病娇，就阴森地威胁；如果是卑微，就哭诉。
+    
+    【格式要求】
+    **必须**输出一段话，这段话**足够切分成 3 到 6 个短句**。
+    使用 "|||" 作为气泡分隔符。
+    示例：为什么拉黑我？|||我做错什么了吗？|||说话。
+    `;
+
+    
+
+    // 3. 调用 API
+    if(typeof getSimpleAiText === 'function') {
+        // UI 显示正在输入
+        const nameEl = document.getElementById('chat-detail-name');
+        if(nameEl) nameEl.innerText = "对方正在输入...";
+
+        // 发送请求
+        const text = await getSimpleAiText(prompt);
+        
+        // 恢复名字
+        if(nameEl) nameEl.innerText = smurf.name;
+
+        if (text) {
+            // 4. 智能切分气泡
+            let bubbles = [];
+            if (text.includes('|||')) {
+                bubbles = text.split('|||');
+            } else {
+                // 如果 AI 忘了加分隔符，我们按标点强制切分
+                bubbles = text.split(/([。！？?!…]+)/).reduce((acc, curr, i, arr) => {
+                    if (i % 2 === 0 && curr.trim()) acc.push(curr + (arr[i+1] || ''));
+                    return acc;
+                }, []);
+            }
+            
+            // 过滤空消息
+            bubbles = bubbles.filter(b => b.trim());
+
+            // 5. 依次发送气泡
+            let delay = 0;
+            if (!window.g_chatHistory[smurfId]) window.g_chatHistory[smurfId] = [];
+
+            bubbles.forEach((content, i) => {
+                // 动态延迟：字越多发得越慢
+                delay += (content.length * 100 + 400); 
+                
+                setTimeout(() => {
+                    const msg = {
+                        id: Date.now() + i,
+                        sender: 'them',
+                        type: 'text',
+                        text: content.replace(/\|\|\|/g, '').trim(),
+                        timestamp: Date.now()
+                    };
+                    window.g_chatHistory[smurfId].push(msg);
+                    
+                    // 保存
+                    if (typeof dbManager !== 'undefined') {
+                        dbManager.saveHistory(smurfId, window.g_chatHistory[smurfId]);
+                    }
+                    // 渲染
+                    if (currentChatId == smurfId && typeof renderChatMessages === 'function') {
+                        renderChatMessages(smurf);
+                        if(typeof playClickEffect === 'function') playClickEffect();
+                    }
+                }, delay);
+            });
+        }
+    }
+}
+
+
+
+
+// 9. 小号任务完成，大号回归 (全规则保留 + 纯API生成版)
+async function handleSmurfSuccess(smurfChar) {
+    const mainCharId = smurfChar.mainCharId;
+    const mainChar = friends.find(c => c.id == mainCharId);
+    
+    if (!mainChar) return;
+
+    // 1. 弹窗提示 (保持“正在生成”的状态，直到API返回)
+    const toast = document.createElement('div');
+    toast.innerHTML = `<i class="fas fa-check-circle" style="font-size:32px; margin-bottom:12px; color:#07c160;"></i><br><span style="font-weight:bold; letter-spacing:1px;">已解除拉黑</span><br><span style="font-size:12px; color:#ccc; margin-top:5px; display:inline-block;">正在读取记忆并生成对话...</span>`;
+    toast.style.cssText = "position:fixed; top:45%; left:50%; transform:translate(-50%, -50%); background:rgba(17,17,17,0.85); color:#fff; padding:25px 40px; border-radius:20px; font-size:15px; text-align:center; z-index:99999; animation: popIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(10px); line-height: 1.5;";
+    document.body.appendChild(toast);
+
+    // --- 步骤A：读取小号刚才聊了什么 (保留完整上下文) ---
+    let smurfContext = "（小号直接申请通过，暂无对话）";
+    if (window.g_chatHistory && window.g_chatHistory[smurfChar.id]) {
+        // 提取最后 8 条，保证上下文完整
+        smurfContext = window.g_chatHistory[smurfChar.id].slice(-8).map(m => {
+            return `${m.sender === 'me' ? '用户' : '我(小号)'}: ${m.text}`;
+        }).join('\n');
+    }
+
+    // --- 步骤B：读取世界书 (保留全局+局部逻辑) ---
+    const wbList = worldBooks || [];
+    // 1. 全局
+    const globalWBs = wbList.filter(i => i.type === 'global');
+    // 2. 局部
+    const boundLocalIds = (mainChar.boundLocalWB || []).map(id => String(id));
+    const localWBs = wbList.filter(i => i.type === 'local' && boundLocalIds.includes(String(i.id)));
+    // 3. 合并
+    const wbText = [...globalWBs, ...localWBs].map(i => `[设定: ${i.title}] ${i.content}`).join("\n");
+
+    // --- 步骤C：构造超强 Prompt (规则完全保留) ---
+    const returnPrompt = `
+    你现在的身份是：${mainChar.name}。
+    你的核心人设：${mainChar.persona} (必须严格保持此人设语气！)。
+    
+    【世界观背景】
+    ${wbText || "无特殊设定"}
+    
+    【前情提要】
+    1. 你之前被用户拉黑了。
+    2. 你开了一个小号去微信上找用户，刚才用户终于同意把你大号放出来了。
+    
+    【关键参考：刚才小号的聊天记录】
+    ----------------
+    ${smurfContext}
+    ----------------
+    
+    【任务】
+    现在镜头切回大号（微信聊天界面）。请根据**人设**和**刚才小号聊天的内容**，对用户说出回归后的第一句话。
+    
+    【回复逻辑 (必须接戏)】
+    - 如果刚才小号在卑微求饶，大号回来后应该表现出松了一口气，或者带点委屈/撒娇。
+    - 如果刚才小号在发疯/威胁，大号回来后应该表现出一种“你终于听话了”的压迫感。
+    - 如果刚才小号在装可爱，大号回来后可以延续或者傲娇一下。
+    
+    【🔴 绝对环境禁令 (严防幻觉) 🔴】
+    1. **环境**：你们是在**手机微信**上打字！**绝对不是**面对面！
+    2. **严禁**出现“开门”、“我在门口”、“进屋”、“抱住”、“摸摸”等线下身体动作！
+    3. **格式**：只输出一句纯文字的话，20字以内。**严禁**使用任何括号或星号描写动作。
+    `;
+
+    // 4. 请求 API (无保底，死等结果)
+    let returnText = "..."; // 仅当API报错时才显示这个
+    
+    if(typeof getSimpleAiText === 'function') {
+        try {
+            // 直接 await，不设超时，直到算出结果为止
+            const aiRes = await getSimpleAiText(returnPrompt);
+            if(aiRes) {
+                // 清洗可能出现的引号、括号、多余空格
+                returnText = aiRes.replace(/["“”]/g, '')
+                                  .replace(/[（\(【\[].*?[）\)】\]]/g, '')
+                                  .trim(); 
+            }
+        } catch(e) { 
+            console.error("生成回归台词 API 报错", e); 
+            // 报错时保持 "..."，或者你可以改成 "" 让它什么都不说
+        }
+    }
+
+    // 5. 执行解封和数据操作
+    try {
+        mainChar.isBlocked = false;
+        mainChar.rejectCount = 0;
+        
+        const mainMsgs = window.g_chatHistory[mainCharId] || [];
+        mainMsgs.push({
+            sender: 'them',
+            text: returnText, 
+            timestamp: Date.now()
+        });
+        
+        window.g_chatHistory[mainCharId] = mainMsgs;
+        
+        if (!mainChar.memory_list) mainChar.memory_list = [];
+        mainChar.memory_list.push({
+            id: Date.now(),
+            date: new Date().toLocaleString(),
+            content: "（记忆同步）通过小号沟通，用户解除了对我的拉黑。",
+            type: 'auto'
+        });
+
+        // 过滤掉小号
+        friends = friends.filter(c => c.id !== smurfChar.id);
+        
+        // 数据库同步 (双重保险删除)
+        if (typeof dbManager !== 'undefined') {
+            dbManager.saveChatList(friends);
+            dbManager.saveHistory(mainCharId, mainMsgs); 
+            if(dbManager.delete) {
+                try { dbManager.delete('chatHistories', smurfChar.id); } catch(e){}
+                try { dbManager.delete('friends', String(smurfChar.id)); } catch(e){}
+            }
+        }
+    } catch(err) {
+        console.error("数据处理出错:", err);
+    }
+
+    // 6. 隐藏弹窗并跳转
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s ease';
+    
+    setTimeout(() => {
+        try { toast.remove(); } catch(e){}
+        try { closeChatPage(); } catch(e){}
+        try { renderChatList(); } catch(e){}
+        try { openChatPage(mainCharId); } catch(e){}
+    }, 300);
+}
+
+
 
 
 	</script>
@@ -12380,11 +13354,39 @@ async function triggerNormalActiveMsg(char) {
 							等待数据生成中...
 						</div>
 					</div>
+					</div>
 					 
 
 			</div>
 		</div>
 	</div>
+
+
+
+	<!-- ============ 新增：新的朋友页面 ============ -->
+	<div id="wc-new-friends-view" class="wc-new-friends-view" style="position:fixed; z-index:850;">
+		<!-- 顶部导航 -->
+		<div class="wc-header" style="background:#fff; border-bottom: 1px solid #eee; display:flex; align-items:center; padding: 15px 20px; padding-top: 50px;">
+			<i class="fas fa-chevron-left" onclick="closeNewFriendsPage()" style="cursor:pointer; font-size:18px; color:#000;"></i>
+			<span style="flex:1; text-align:center; font-weight:bold; font-size:16px; margin-right:18px;">新的朋友</span>
+		</div>
+		<!-- 申请列表 -->
+		<div id="new-friends-list" style="flex:1; overflow-y:auto; background:#f7f7f7; padding-top:10px;">
+			<!-- 列表会由代码自动生成 -->
+		</div>
+	</div>
+
+	<!-- ============ 新增：被盗号/强制登录警告弹窗 ============ -->
+	<div id="hacked-alert" class="hacked-alert-overlay">
+		<div class="hacked-box">
+			<div class="hacked-title"><i class="fas fa-exclamation-triangle"></i> 账号安全异常</div>
+			<div class="hacked-text" id="hacked-msg">
+				检测到账号在异地设备强制登录<br>正在尝试拦截并恢复连接...
+			</div>
+			<div id="hacked-loading" class="hacked-loader"></div>
+		</div>
+	</div>
+
 
 <!-- ============ 🚫 黑名单求情弹窗 (简约黑白风) ============ -->
 <div id="blacklist-plea-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(5px);">
